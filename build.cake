@@ -44,7 +44,10 @@ Task("Run-Unit-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
-	XUnit2("./src/**/bin/" + configuration + "/*.UnitTests.dll");
+	DotNetCoreTest("./src/ToyStorage.UnitTests", new DotNetCoreTestSettings
+    {
+        Configuration = configuration
+    });
 });
 
 //////////////////////////////////////////////////////////////////////
