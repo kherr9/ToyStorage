@@ -3,5 +3,6 @@ image: Visual Studio 2017
 build_script:
 - cmd: >-
     "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
+
     PowerShell -Version 5.0 .\build.ps1
 test: off
