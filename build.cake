@@ -1,4 +1,4 @@
-#tool nuget:?package=NUnit.ConsoleRunner&version=3.4.0
+#tool "nuget:?package=xunit.runner.console"
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
@@ -27,34 +27,24 @@ Task("Restore-NuGet-Packages")
     .IsDependentOn("Clean")
     .Does(() =>
 {
-    NuGetRestore("./src/ToyStorage.sln");
+	DotNetCoreRestore("./src/ToyStorage.sln");
 });
 
 Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
 {
-    if(IsRunningOnWindows())
+	DotNetCoreBuild("./src/ToyStorage.sln", new DotNetCoreBuildSettings
     {
-      // Use MSBuild
-      MSBuild("./src/ToyStorage.sln", settings =>
-        settings.SetConfiguration(configuration));
-    }
-    else
-    {
-      // Use XBuild
-      XBuild("./src/ToyStorage.sln", settings =>
-        settings.SetConfiguration(configuration));
-    }
+        Configuration = configuration
+    });
 });
 
 Task("Run-Unit-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    NUnit3("./src/**/bin/" + configuration + "/*.UnitTests.dll", new NUnit3Settings {
-        NoResults = true
-        });
+	XUnit2("./src/**/bin/" + configuration + "/*.UnitTests.dll");
 });
 
 //////////////////////////////////////////////////////////////////////

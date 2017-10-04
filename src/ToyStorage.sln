@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{A0AC4627
 		..\tools\packages.config = ..\tools\packages.config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToyStorage.UnitTests", "ToyStorage.UnitTests\ToyStorage.UnitTests.csproj", "{2AD5E1F3-0014-419C-9C9D-A03C5D0D647B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{2A889B26-7A76-415E-BBF2-24E592193D2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A889B26-7A76-415E-BBF2-24E592193D2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A889B26-7A76-415E-BBF2-24E592193D2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AD5E1F3-0014-419C-9C9D-A03C5D0D647B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AD5E1F3-0014-419C-9C9D-A03C5D0D647B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AD5E1F3-0014-419C-9C9D-A03C5D0D647B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AD5E1F3-0014-419C-9C9D-A03C5D0D647B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
