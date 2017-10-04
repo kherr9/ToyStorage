@@ -3,9 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToyStorage", "ToyStorage\ToyStorage.csproj", "{2A889B26-7A76-415E-BBF2-24E592193D2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToyStorage", "ToyStorage\ToyStorage.csproj", "{2A889B26-7A76-415E-BBF2-24E592193D2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToyStorage.UnitTests", "ToyStorage.UnitTests\ToyStorage.UnitTests.csproj", "{FD072F58-CC0C-40A5-9460-C7F6E4904F7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToyStorage.UnitTests", "ToyStorage.UnitTests\ToyStorage.UnitTests.csproj", "{FD072F58-CC0C-40A5-9460-C7F6E4904F7C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4C4B9BD0-FDFF-4E54-A58E-4F39DE94DC65}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitattributes = ..\.gitattributes
+		..\.gitignore = ..\.gitignore
+		..\build.cake = ..\build.cake
+		..\build.ps1 = ..\build.ps1
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{A0AC4627-BCA3-4075-A0E9-4F091DB14792}"
+	ProjectSection(SolutionItems) = preProject
+		..\tools\packages.config = ..\tools\packages.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
