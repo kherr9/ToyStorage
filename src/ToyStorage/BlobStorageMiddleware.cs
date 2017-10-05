@@ -5,7 +5,7 @@ namespace ToyStorage
 {
     public sealed class BlobStorageMiddleware : IMiddleware
     {
-        public Task Invoke(RequestDelegate next, RequestContext context)
+        public Task Invoke(RequestContext context, RequestDelegate next)
         {
             switch (context.RequestMethod)
             {

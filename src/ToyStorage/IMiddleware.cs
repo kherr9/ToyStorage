@@ -6,6 +6,6 @@ namespace ToyStorage
 
     public interface IMiddleware
     {
-        Task Invoke(RequestDelegate next, RequestContext context);
+        Task Invoke(RequestContext context, RequestDelegate next);
     }
 }

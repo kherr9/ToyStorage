@@ -6,7 +6,7 @@ namespace ToyStorage
 {
     public sealed class JsonFormaterMiddleware : IMiddleware
     {
-        public async Task Invoke(RequestDelegate next, RequestContext context)
+        public async Task Invoke(RequestContext context, RequestDelegate next)
         {
             if (context.IsWrite())
             {
