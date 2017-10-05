@@ -51,7 +51,14 @@ namespace ToyStorage
                     return list[exectionIndex].Invoke(context, Next);
                 }
 
-                return list[0].Invoke(context, Next);
+                if (list.Any())
+                {
+                    // first call
+                    return list[0].Invoke(context, Next);
+                }
+
+                // when souce is empty
+                return Task.CompletedTask;
             };
         }
 
