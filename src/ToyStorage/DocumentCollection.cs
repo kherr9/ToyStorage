@@ -17,6 +17,8 @@ namespace ToyStorage
 
         public async Task<TEntity> GetAsync<TEntity>(string id)
         {
+            if (id == null) throw new ArgumentNullException(nameof(id));
+
             var context = new RequestContext()
             {
                 RequestMethod = RequestMethods.Get,
@@ -33,6 +35,9 @@ namespace ToyStorage
 
         public Task StoreAsync(object entity, string id)
         {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (id == null) throw new ArgumentNullException(nameof(id));
+
             var context = new RequestContext()
             {
                 RequestMethod = RequestMethods.Put,
@@ -47,6 +52,8 @@ namespace ToyStorage
 
         public Task DeleteAsync(string id)
         {
+            if (id == null) throw new ArgumentNullException(nameof(id));
+
             var context = new RequestContext()
             {
                 RequestMethod = RequestMethods.Delete,
