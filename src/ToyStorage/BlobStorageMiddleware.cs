@@ -5,19 +5,24 @@ namespace ToyStorage
 {
     public sealed class BlobStorageMiddleware : IMiddleware
     {
-        public Task Invoke(RequestContext context, RequestDelegate next)
+        public async Task Invoke(RequestContext context, RequestDelegate next)
         {
             switch (context.RequestMethod)
             {
                 case RequestMethods.Get:
-                    return OnGetAsync(context);
+                    await OnGetAsync(context);
+                    break;
                 case RequestMethods.Put:
-                    return OnPutAsync(context);
+                    await OnPutAsync(context);
+                    break;
                 case RequestMethods.Delete:
-                    return OnDeleteAsync(context);
+                    await OnDeleteAsync(context);
+                    break;
                 default:
                     throw new InvalidOperationException($"Unknown {nameof(context.RequestMethod)} '{context.RequestMethod}'");
             }
+
+            await next(context);
         }
 
         private async Task OnGetAsync(RequestContext context)
