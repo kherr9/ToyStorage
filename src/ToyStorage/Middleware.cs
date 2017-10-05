@@ -19,6 +19,11 @@ namespace ToyStorage
             Use(new AnonymousMiddleware(func));
         }
 
+        public void Use<T>() where T : IMiddleware, new()
+        {
+            Use(new T());
+        }
+
         public void Use(IMiddleware middleware)
         {
             if (middleware == null) throw new ArgumentNullException(nameof(middleware));
