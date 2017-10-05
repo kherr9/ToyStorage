@@ -49,8 +49,8 @@ namespace ToyStorage
                     exectionIndex++;
                     if (exectionIndex >= list.Length)
                     {
-                        // else the last middleware function calls next() when no next middleware function exists,
-                        // that nonexistent function will return null;
+                        // last middleware function calls next() when no next middleware function exists,
+                        // that nonexistent function will return completed Task;
                         return Task.CompletedTask;
                     }
 
