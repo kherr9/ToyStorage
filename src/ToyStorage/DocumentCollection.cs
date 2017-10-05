@@ -4,12 +4,12 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace ToyStorage
 {
-    public class MiddlewareDocumentCollection : IDocumentCollection
+    public class DocumentCollection : IDocumentCollection
     {
         private readonly CloudBlobContainer _container;
         private readonly Middleware _middleware;
 
-        public MiddlewareDocumentCollection(CloudBlobContainer container, Middleware middleware)
+        public DocumentCollection(CloudBlobContainer container, Middleware middleware)
         {
             _container = container ?? throw new ArgumentNullException(nameof(container));
             _middleware = middleware ?? throw new ArgumentNullException(nameof(middleware));

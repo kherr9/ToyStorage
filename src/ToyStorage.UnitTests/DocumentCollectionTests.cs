@@ -5,14 +5,14 @@ using Xunit;
 
 namespace ToyStorage.UnitTests
 {
-    public class MiddlewareDocumentCollectionTests
+    public class DocumentCollectionTests
     {
-        private readonly MiddlewareDocumentCollection _documentCollection;
+        private readonly DocumentCollection _documentCollection;
 
-        public MiddlewareDocumentCollectionTests()
+        public DocumentCollectionTests()
         {
             var client = CloudStorageAccountHelper.CreateCloudBlobClient();
-            var container = client.GetContainerReference(nameof(MiddlewareDocumentCollectionTests).ToLowerInvariant());
+            var container = client.GetContainerReference(this.GetType().Name.ToLowerInvariant());
             container.CreateIfNotExistsAsync().Wait();
 
             var middleware = new Middleware();
@@ -20,7 +20,7 @@ namespace ToyStorage.UnitTests
             middleware.Use<GZipMiddleware>();
             middleware.Use<BlobStorageMiddleware>();
 
-            _documentCollection = new MiddlewareDocumentCollection(container, middleware);
+            _documentCollection = new DocumentCollection(container, middleware);
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace ToyStorage.UnitTests
 
             await _documentCollection.StoreAsync(entity, entity.Id);
             var entityClone = await _documentCollection.GetAsync<Entity>(entity.Id);
-            await _documentCollection.DeleteAsync(entity.Id);
+            ////await _documentCollection.DeleteAsync(entity.Id);
 
             Assert.Equal(entity, entityClone);
             Assert.NotSame(entity, entityClone);
