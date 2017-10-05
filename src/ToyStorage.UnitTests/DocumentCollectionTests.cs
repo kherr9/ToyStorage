@@ -24,14 +24,14 @@ namespace ToyStorage.UnitTests
         }
 
         [Fact]
-        public async Task TestGetAsync()
+        public async Task TestStoreGetDelete()
         {
             // Arrange
             var entity = GenerateEntity();
 
             await _documentCollection.StoreAsync(entity, entity.Id);
             var entityClone = await _documentCollection.GetAsync<Entity>(entity.Id);
-            ////await _documentCollection.DeleteAsync(entity.Id);
+            await _documentCollection.DeleteAsync(entity.Id);
 
             Assert.Equal(entity, entityClone);
             Assert.NotSame(entity, entityClone);
