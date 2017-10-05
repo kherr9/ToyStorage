@@ -16,7 +16,14 @@ namespace ToyStorage
 
         public void Use(Func<RequestContext, RequestDelegate, Task> func)
         {
-            _pipeline.Add(new AnonymousMiddleware(func));
+            Use(new AnonymousMiddleware(func));
+        }
+
+        public void Use(IMiddleware middleware)
+        {
+            if (middleware == null) throw new ArgumentNullException(nameof(middleware));
+
+            _pipeline.Add(middleware);
         }
 
         public Task Run(RequestContext requestContext)
