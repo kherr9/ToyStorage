@@ -54,9 +54,9 @@ namespace ToyStorage.UnitTests
 
             middleware.Use(async (ctx, next) =>
             {
-                ctx.Entity = 45;
+                ctx.Entity = 45; // this will override the previous value
                 await next(ctx);
-                ctx.EntityType = typeof(int); // this will override the previous value
+                ctx.EntityType = typeof(int);
             });
 
             // Act
