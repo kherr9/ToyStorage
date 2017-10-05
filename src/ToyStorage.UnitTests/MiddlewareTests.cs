@@ -83,7 +83,7 @@ namespace ToyStorage.UnitTests
 
             middleware.Use(async (ctx, next) =>
             {
-                // this method should be invoked
+                // this method should NOT be invoked
                 ctx.Entity = 45;
                 await next(ctx);
                 ctx.EntityType = typeof(int);
