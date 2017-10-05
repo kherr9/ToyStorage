@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Xunit;
@@ -40,10 +41,12 @@ namespace ToyStorage.UnitTests
             };
         }
 
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
         class Entity
         {
             public string Id { get; set; }
-
+            
             public string Name { get; set; }
 
             public override bool Equals(object obj)

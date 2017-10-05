@@ -34,6 +34,7 @@ namespace ToyStorage
         private static Func<RequestContext, Task> Compose(IEnumerable<IMiddleware> source)
         {
             var list = source.ToArray();
+            // ReSharper disable once RedundantAssignment
             int exectionIndex = 0;
 
             return context =>
