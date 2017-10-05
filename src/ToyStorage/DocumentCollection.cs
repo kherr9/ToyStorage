@@ -1,54 +1,69 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Blob;
-using Newtonsoft.Json;
 
 namespace ToyStorage
 {
     public class DocumentCollection : IDocumentCollection
     {
         private readonly CloudBlobContainer _container;
-        private readonly JsonSerializer _serializer;
+        private readonly Middleware _middleware;
 
-        public DocumentCollection(CloudBlobContainer container, JsonSerializer serializer)
+        public DocumentCollection(CloudBlobContainer container, Middleware middleware)
         {
             _container = container ?? throw new ArgumentNullException(nameof(container));
-            _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+            _middleware = middleware ?? throw new ArgumentNullException(nameof(middleware));
         }
 
         public async Task<TEntity> GetAsync<TEntity>(string id)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
 
-            var blob = GetBlob(id);
-
-            using (var reader = new JsonTextReader(new StreamReader(await blob.OpenReadAsync())))
+            var context = new RequestContext()
             {
-                return _serializer.Deserialize<TEntity>(reader);
-            }
+                RequestMethod = RequestMethods.Get,
+                Entity = null,
+                EntityType = typeof(TEntity),
+                Content = null,
+                CloudBlockBlob = GetBlob(id),
+            };
+
+            await _middleware.Run(context);
+
+            return (TEntity)context.Entity;
         }
 
-        public async Task StoreAsync(object entity, string id)
+        public Task StoreAsync(object entity, string id)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
             if (id == null) throw new ArgumentNullException(nameof(id));
 
-            var blob = GetBlob(id);
-
-            using (var writer = new JsonTextWriter(new StreamWriter(await blob.OpenWriteAsync())))
+            var context = new RequestContext()
             {
-                _serializer.Serialize(writer, entity);
-            }
+                RequestMethod = RequestMethods.Put,
+                Entity = entity,
+                EntityType = entity.GetType(),
+                Content = null,
+                CloudBlockBlob = GetBlob(id)
+            };
+
+            return _middleware.Run(context);
         }
 
         public Task DeleteAsync(string id)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
 
-            var blob = GetBlob(id);
+            var context = new RequestContext()
+            {
+                RequestMethod = RequestMethods.Delete,
+                Entity = null,
+                EntityType = null,
+                Content = null,
+                CloudBlockBlob = GetBlob(id)
+            };
 
-            return blob.DeleteAsync();
+            return _middleware.Run(context);
         }
 
         private CloudBlockBlob GetBlob(string id)

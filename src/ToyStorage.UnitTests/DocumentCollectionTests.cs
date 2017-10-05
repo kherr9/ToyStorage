@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace ToyStorage.UnitTests
@@ -12,20 +12,26 @@ namespace ToyStorage.UnitTests
         public DocumentCollectionTests()
         {
             var client = CloudStorageAccountHelper.CreateCloudBlobClient();
-            var container = client.GetContainerReference(nameof(DocumentCollectionTests).ToLowerInvariant());
+            var container = client.GetContainerReference(this.GetType().Name.ToLowerInvariant());
             container.CreateIfNotExistsAsync().Wait();
-            _documentCollection = new DocumentCollection(container, new JsonSerializer());
+
+            var middleware = new Middleware();
+            middleware.Use<JsonFormaterMiddleware>();
+            middleware.Use<GZipMiddleware>();
+            middleware.Use<BlobStorageMiddleware>();
+
+            _documentCollection = new DocumentCollection(container, middleware);
         }
 
         [Fact]
-        public async Task TestGetAsync()
+        public async Task TestStoreGetDelete()
         {
             // Arrange
             var entity = GenerateEntity();
-            await _documentCollection.StoreAsync(entity, entity.Id);
 
-            // Assert
+            await _documentCollection.StoreAsync(entity, entity.Id);
             var entityClone = await _documentCollection.GetAsync<Entity>(entity.Id);
+            await _documentCollection.DeleteAsync(entity.Id);
 
             Assert.Equal(entity, entityClone);
             Assert.NotSame(entity, entityClone);
@@ -40,6 +46,8 @@ namespace ToyStorage.UnitTests
             };
         }
 
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
         class Entity
         {
             public string Id { get; set; }
