@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,6 +17,7 @@ namespace ToyStorage.UnitTests
             container.CreateIfNotExistsAsync().Wait();
 
             var middleware = new Middleware();
+            middleware.Use<ValidationMiddleware>();
             middleware.Use<JsonFormaterMiddleware>();
             middleware.Use<GZipMiddleware>();
             middleware.Use<BlobStorageMiddleware>();
@@ -29,12 +31,29 @@ namespace ToyStorage.UnitTests
             // Arrange
             var entity = GenerateEntity();
 
+            // Act
             await _documentCollection.StoreAsync(entity, entity.Id);
             var entityClone = await _documentCollection.GetAsync<Entity>(entity.Id);
+            await _documentCollection.StoreAsync(entity, entity.Id);
             await _documentCollection.DeleteAsync(entity.Id);
 
+            // Assert
             Assert.Equal(entity, entityClone);
             Assert.NotSame(entity, entityClone);
+        }
+
+        [Fact]
+        public async Task TestStoreWithValidationError()
+        {
+            // Arrange
+            var entity = GenerateEntity();
+            entity.Name = null;
+
+            // Act
+            var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _documentCollection.StoreAsync(entity, entity.Id));
+
+            // Assert
+            Assert.NotNull(exception);
         }
 
         private Entity GenerateEntity()
@@ -50,8 +69,10 @@ namespace ToyStorage.UnitTests
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
         class Entity
         {
+            [Required]
             public string Id { get; set; }
 
+            [Required]
             public string Name { get; set; }
 
             public override bool Equals(object obj)
