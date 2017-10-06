@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace ToyStorage
 {
-    public sealed class JsonFormaterMiddleware : IMiddleware
+    public class JsonFormaterMiddleware : IMiddleware
     {
         public async Task Invoke(RequestContext context, RequestDelegate next)
         {

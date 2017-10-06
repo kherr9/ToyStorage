@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ToyStorage
 {
-    public sealed class BlobStorageMiddleware : IMiddleware
+    public class BlobStorageMiddleware : IMiddleware
     {
         public async Task Invoke(RequestContext context, RequestDelegate next)
         {

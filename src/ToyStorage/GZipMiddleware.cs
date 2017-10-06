@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ToyStorage
 {
-    public sealed class GZipMiddleware : IMiddleware
+    public class GZipMiddleware : IMiddleware
     {
         public async Task Invoke(RequestContext context, RequestDelegate next)
         {
