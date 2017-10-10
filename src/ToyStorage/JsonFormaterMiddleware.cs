@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -9,13 +10,25 @@ namespace ToyStorage
     /// </summary>
     public class JsonFormaterMiddleware : IMiddleware
     {
+        private readonly JsonSerializerSettings _serializerSettings;
         private const string JsonContentType = "application/json";
+
+        public JsonFormaterMiddleware()
+            : this(new JsonSerializerSettings())
+        {
+
+        }
+
+        public JsonFormaterMiddleware(JsonSerializerSettings serializerSettings)
+        {
+            _serializerSettings = serializerSettings ?? throw new ArgumentNullException(nameof(serializerSettings));
+        }
 
         public async Task Invoke(RequestContext context, RequestDelegate next)
         {
             if (context.IsWrite())
             {
-                context.Content = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(context.Entity));
+                context.Content = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(context.Entity, _serializerSettings));
                 context.CloudBlockBlob.Properties.ContentType = JsonContentType;
             }
 
@@ -23,7 +36,7 @@ namespace ToyStorage
 
             if (context.IsRead() && context.CloudBlockBlob.Properties.ContentType == JsonContentType)
             {
-                context.Entity = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(context.Content), context.EntityType);
+                context.Entity = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(context.Content), context.EntityType, _serializerSettings);
             }
         }
     }

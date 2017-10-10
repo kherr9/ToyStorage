@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Serialization;
 using Xunit;
 
 namespace ToyStorage.UnitTests
@@ -18,7 +19,10 @@ namespace ToyStorage.UnitTests
 
             var middleware = new Middleware();
             middleware.Use<ValidationMiddleware>();
-            middleware.UseJson();
+            middleware.UseJsonFormatter(opt =>
+            {
+                opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            });
             middleware.Use<GZipMiddleware>();
             middleware.Use<BlobStorageMiddleware>();
 
