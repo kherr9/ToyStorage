@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 
 namespace ToyStorage
 {
+    /// <summary>
+    /// Middleware component that formats object to binary to be used downstream for persistence.
+    /// </summary>
     public class JsonFormaterMiddleware : IMiddleware
     {
         public async Task Invoke(RequestContext context, RequestDelegate next)
