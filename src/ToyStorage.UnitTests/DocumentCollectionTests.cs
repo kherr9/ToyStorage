@@ -18,7 +18,7 @@ namespace ToyStorage.UnitTests
 
             var middleware = new Middleware();
             middleware.Use<ValidationMiddleware>();
-            middleware.Use<JsonFormaterMiddleware>();
+            middleware.UseJson();
             middleware.Use<GZipMiddleware>();
             middleware.Use<BlobStorageMiddleware>();
 
