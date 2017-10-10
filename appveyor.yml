@@ -2,7 +2,7 @@ version: 0.0.{build}
 image: Visual Studio 2017
 branches:
     only:
-        - master
+        - master # this will also run pull requests
 before_build:
 - cmd: >-
     "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
