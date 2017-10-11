@@ -34,13 +34,10 @@ Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
 {
-	Information("Got verions...");
-	Information(version);
-
 	DotNetCoreBuild("./src/ToyStorage.sln", new DotNetCoreBuildSettings
     {
         Configuration = configuration,
-		ArgumentCustomization  = args => args.Append("/p:VersionPrefix=" + version.ToString(3))
+		ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version.ToString(3)}")
     });
 });
 

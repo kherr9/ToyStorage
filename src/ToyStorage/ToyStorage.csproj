@@ -4,7 +4,6 @@
     <RepositoryUrl>https://github.com/kherr9/ToyStorage</RepositoryUrl>
     <PackageTags>azure blob storage</PackageTags>
     <VersionPrefix>$(VersionPrefix)</VersionPrefix>
-    <!--<VersionSuffix>$(VersionSuffix)</VersionSuffix>-->
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.0" />
