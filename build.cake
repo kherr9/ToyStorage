@@ -4,7 +4,7 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var version = Argument("version", "0.0.0");
+var version = Argument("build_version", "0.0.0");
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -34,8 +34,8 @@ Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
 {
-	Debug("Got verions...");
-	Debug(version);
+	Information("Got verions...");
+	Information(version);
 
 	DotNetCoreBuild("./src/ToyStorage.sln", new DotNetCoreBuildSettings
     {

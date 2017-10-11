@@ -19,7 +19,7 @@ branches:
 
 build_script:
 - cmd: >-
-    PowerShell -Version 5.0 .\build.ps1 -ScriptArgs '-version="1.2.3"'
+    PowerShell -Version 5.0 .\build.ps1 -ScriptArgs '-build_version="1.2.3"'
 
 test: off
 
