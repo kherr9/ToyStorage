@@ -5,8 +5,9 @@ configuration: Release
 image: Visual Studio 2017
 
 environment:
-    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-    NUGET_XMLDOC_MODE: skip
+    DOTNET_CLI_TELEMETRY_OPTOUT: true # don't send telemetry data
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # this will prevent the CLI from pre-populating the packages cache
+    NUGET_XMLDOC_MODE: skip # do not extract XML documentation files
 
 branches:
     only:
