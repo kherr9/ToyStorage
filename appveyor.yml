@@ -1,12 +1,23 @@
 version: 0.0.{build}
+
+configuration: Release
+
 image: Visual Studio 2017
+
+environment:
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+    NUGET_XMLDOC_MODE: skip
+
 branches:
     only:
         - master # this will also run pull requests
+
 before_build:
 - cmd: >-
     "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
+
 build_script:
 - cmd: >-
     PowerShell -Version 5.0 .\build.ps1
+
 test: off
