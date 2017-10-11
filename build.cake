@@ -34,6 +34,8 @@ Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
 {
+	Information($"Building version {version}");
+
 	DotNetCoreBuild("./src/ToyStorage.sln", new DotNetCoreBuildSettings
     {
         Configuration = configuration,
@@ -53,6 +55,8 @@ Task("Run-Unit-Tests")
 Task("Pack")
 	.Does(() => 
 {
+	Information($"Packing version {version}");
+
 	// beta
 	DotNetCorePack("./src/ToyStorage", new DotNetCorePackSettings
 	{
