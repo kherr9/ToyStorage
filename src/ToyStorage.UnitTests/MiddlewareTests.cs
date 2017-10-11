@@ -78,7 +78,7 @@ namespace ToyStorage.UnitTests
                 ctx.Entity = "this is a string";
                 ctx.EntityType = typeof(string);
                 // don't call next to end pipeline
-                return Task.CompletedTask;
+                return TaskHelper.CompletedTask;
             });
 
             middleware.Use(async (ctx, next) =>

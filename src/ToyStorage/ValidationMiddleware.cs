@@ -10,7 +10,7 @@ namespace ToyStorage
             var entity = context.Entity;
             if (entity != null)
             {
-                Validator.ValidateObject(entity, new ValidationContext(entity, null, null));
+                Validator.ValidateObject(entity, new ValidationContext(entity), true);
             }
 
             return next(context);

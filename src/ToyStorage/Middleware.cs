@@ -51,7 +51,7 @@ namespace ToyStorage
                     {
                         // last middleware function calls next() when no next middleware function exists,
                         // that nonexistent function will return completed Task;
-                        return Task.CompletedTask;
+                        return TaskHelper.CompletedTask;
                     }
 
                     return list[exectionIndex].Invoke(context, Next);
@@ -64,7 +64,7 @@ namespace ToyStorage
                 }
 
                 // when souce is empty
-                return Task.CompletedTask;
+                return TaskHelper.CompletedTask;
             };
         }
 
