@@ -59,7 +59,7 @@ Task("Pack")
 		Configuration = configuration,
 		OutputDirectory = "./artifacts/",
 		NoBuild = true,
-		VersionSuffix = $"beta-{version.Revision}",
+		VersionSuffix = $"ci-{version.Revision}",
 		ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version.ToString(3)}")
 	});
 
