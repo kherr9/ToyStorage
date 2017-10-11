@@ -1,4 +1,4 @@
-version: {build}
+version: 0.0.{build}
 
 configuration: Release
 
@@ -19,7 +19,7 @@ before_build:
 
 build_script:
 - cmd: >-
-    PowerShell -Version 5.0 .\build.ps1
+    PowerShell -Version 5.0 .\build.ps1 -ScriptArgs '-version="$($env:appveyor_build_version)"'
 
 test: off
 
