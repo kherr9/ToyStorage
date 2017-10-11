@@ -40,7 +40,7 @@ Task("Build")
 	DotNetCoreBuild("./src/ToyStorage.sln", new DotNetCoreBuildSettings
     {
         Configuration = configuration,
-		ArgumentCustomization  = args => args.Append("/p:SemVer=" + version)
+		ArgumentCustomization  = args => args.Append("/p:VersionPrefix=" + version)
     });
 });
 
@@ -62,7 +62,17 @@ Task("Pack")
 	{
 		Configuration = configuration,
 		OutputDirectory = "./artifacts/",
-		NoBuild = true
+		NoBuild = true,
+		VersionSuffix = "beta",
+		ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version}")
+	});
+
+	DotNetCorePack("./src/ToyStorage", new DotNetCorePackSettings
+	{
+		Configuration = configuration,
+		OutputDirectory = "./artifacts/",
+		NoBuild = true,
+		ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version}")
 	});
 });
 
@@ -72,7 +82,7 @@ Task("Pack")
 
 Task("Default")
 	.IsDependentOn("Build")
-    .IsDependentOn("Run-Unit-Tests")
+    //.IsDependentOn("Run-Unit-Tests")
 	.IsDependentOn("Pack");
 
 //////////////////////////////////////////////////////////////////////
