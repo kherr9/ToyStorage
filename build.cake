@@ -61,7 +61,8 @@ Task("Pack")
 	DotNetCorePack("./src/ToyStorage", new DotNetCorePackSettings
 	{
 		Configuration = configuration,
-		OutputDirectory = "./artifacts/"
+		OutputDirectory = "./artifacts/",
+		NoBuild = true
 	});
 });
 
