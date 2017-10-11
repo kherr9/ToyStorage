@@ -70,13 +70,13 @@ Task("Pack")
 	});
 
 	// release
-	DotNetCorePack("./src/ToyStorage", new DotNetCorePackSettings
-	{
-		Configuration = configuration,
-		OutputDirectory = artifactDir,
-		NoBuild = true,
-		ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version.ToString(3)}")
-	});
+	//DotNetCorePack("./src/ToyStorage", new DotNetCorePackSettings
+	//{
+	//	Configuration = configuration,
+	//	OutputDirectory = artifactDir,
+	//	NoBuild = true,
+	//	ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version.ToString(3)}")
+	//});
 });
 
 //////////////////////////////////////////////////////////////////////
