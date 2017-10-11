@@ -7,7 +7,7 @@ namespace ToyStorage
     /// </summary>
     internal class TaskHelper
     {
-#if NET45 || NETSTANDARD1_1
+#if NET45
         public static readonly Task CompletedTask = Task.FromResult(true);
 #else
         public static readonly Task CompletedTask = Task.CompletedTask;

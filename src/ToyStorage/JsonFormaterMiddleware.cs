@@ -36,20 +36,8 @@ namespace ToyStorage
 
             if (context.IsRead() && context.CloudBlockBlob.Properties.ContentType == JsonContentType)
             {
-                context.Entity = JsonConvert.DeserializeObject(GetString(context.Content), context.EntityType, _serializerSettings);
+                context.Entity = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(context.Content), context.EntityType, _serializerSettings);
             }
         }
-
-#if NETSTANDARD1_1
-        private static string GetString(byte[] bytes)
-        {
-            return Encoding.UTF8.GetString(bytes, 0, bytes.Length);
-        }
-#else
-        private static string GetString(byte[] bytes)
-        {
-            return Encoding.UTF8.GetString(bytes);
-        }
-#endif
     }
 }
