@@ -1,6 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard1.3</TargetFrameworks>
+    <RepositoryUrl>https://github.com/kherr9/ToyStorage</RepositoryUrl>
+    <PackageTags>azure blob storage</PackageTags>
+    <VersionPrefix>$(VersionPrefix)</VersionPrefix>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.0" />
