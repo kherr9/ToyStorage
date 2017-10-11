@@ -3,7 +3,8 @@
     <TargetFrameworks>net45;netstandard1.3</TargetFrameworks>
     <RepositoryUrl>https://github.com/kherr9/ToyStorage</RepositoryUrl>
     <PackageTags>azure blob storage</PackageTags>
-    <Version>$(SemVer)</Version>
+    <VersionPrefix>$(SemVer)</VersionPrefix>
+    <VersionSuffix>alpha</VersionSuffix>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.0" />
