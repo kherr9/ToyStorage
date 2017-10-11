@@ -1,3 +1,4 @@
+#addin "Cake.FileHelpers"
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
@@ -23,8 +24,35 @@ Task("Clean")
     CleanDirectory(buildDir);
 });
 
+Task("SetVersion")
+	.Does(() => 
+{
+	/*
+	var file = "./src/ToyStorage.SolutionInfo.cs";
+	var version = "0.0.1";
+	var buildNo = "123";
+	var semVersion = string.Concat(version + "-" + buildNo);
+	CreateAssemblyInfo(file, new AssemblyInfoSettings {
+		Product = "SampleProject",
+		Version = version,
+		FileVersion = version,
+		InformationalVersion = semVersion,
+		Copyright = string.Format("Copyright (c) Contoso 2014 - {0}", DateTime.Now.Year)
+	});
+	*/
+
+	ReplaceRegexInFiles("./src/ToyStorage/AssemblyInfo.cs", 
+                    "(?<=AssemblyVersion\\(\")(.+?)(?=\"\\))", 
+                    version);
+
+	ReplaceRegexInFiles("./src/ToyStorage/AssemblyInfo.cs", 
+                    "(?<=AssemblyFileVersion\\(\")(.+?)(?=\"\\))", 
+                    version);
+});
+
 Task("Restore-NuGet-Packages")
     .IsDependentOn("Clean")
+    .IsDependentOn("SetVersion")
     .Does(() =>
 {
 	DotNetCoreRestore("./src/ToyStorage.sln");
