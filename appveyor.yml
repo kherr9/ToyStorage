@@ -18,8 +18,7 @@ branches:
 #    "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
 
 build_script:
-- cmd: >-
-    PowerShell -Version 5.0 .\build.ps1 -ScriptArgs '-build_version="1.2.3"'
+- ps: .\build.ps1 -ScriptArgs '-build_version="1.2.3"'
 
 test: off
 
