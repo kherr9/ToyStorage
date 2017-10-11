@@ -4,7 +4,7 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var version = Argument("build_version", "0.0.0");
+var version = new Version(Argument("build_version", "0.0.0.0"));
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -40,12 +40,11 @@ Task("Build")
 	DotNetCoreBuild("./src/ToyStorage.sln", new DotNetCoreBuildSettings
     {
         Configuration = configuration,
-		ArgumentCustomization  = args => args.Append("/p:VersionPrefix=" + version)
+		ArgumentCustomization  = args => args.Append("/p:VersionPrefix=" + version.ToString(3))
     });
 });
 
 Task("Run-Unit-Tests")
-    .IsDependentOn("Build")
     .Does(() =>
 {
 	DotNetCoreTest("./src/ToyStorage.UnitTests", new DotNetCoreTestSettings
@@ -55,24 +54,25 @@ Task("Run-Unit-Tests")
 });
 
 Task("Pack")
-	////.IsDependentOn("Build")
 	.Does(() => 
 {
+	// beta
 	DotNetCorePack("./src/ToyStorage", new DotNetCorePackSettings
 	{
 		Configuration = configuration,
 		OutputDirectory = "./artifacts/",
 		NoBuild = true,
-		VersionSuffix = "beta",
-		ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version}")
+		VersionSuffix = $"beta-{version.Revision}",
+		ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version.ToString(3)}")
 	});
 
+	// release
 	DotNetCorePack("./src/ToyStorage", new DotNetCorePackSettings
 	{
 		Configuration = configuration,
 		OutputDirectory = "./artifacts/",
 		NoBuild = true,
-		ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version}")
+		ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version.ToString(3)}")
 	});
 });
 
@@ -82,7 +82,7 @@ Task("Pack")
 
 Task("Default")
 	.IsDependentOn("Build")
-    //.IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Run-Unit-Tests")
 	.IsDependentOn("Pack");
 
 //////////////////////////////////////////////////////////////////////
