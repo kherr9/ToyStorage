@@ -22,14 +22,12 @@ test: off
 
 artifacts:
 - path: artifacts\*.nupkg
-  name: NuGet
+  name: MyGet
 
 deploy:
 - provider: NuGet
   server: https://www.myget.org/F/kherr9/api/v2/package
   api_key:
     secure: VyHjv3mh6Ye9UlA6ErhBp0ptFzZRJW+nK2340ewJIAOuQPoYh4rw3bpWOc+7rIV6
-  skip_symbols: true
-  on:
-    branch: master
-  artifact: NuGet
+  skip_symbols: false
+  artifact: MyGet
