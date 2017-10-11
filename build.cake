@@ -49,12 +49,25 @@ Task("Run-Unit-Tests")
     });
 });
 
+Task("Pack")
+	////.IsDependentOn("Build")
+	.Does(() => 
+{
+	DotNetCorePack("./src/ToyStorage", new DotNetCorePackSettings
+	{
+		Configuration = configuration,
+		OutputDirectory = "./artifacts/"
+	});
+});
+
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
-    .IsDependentOn("Run-Unit-Tests");
+	.IsDependentOn("Build")
+    .IsDependentOn("Run-Unit-Tests")
+	.IsDependentOn("Pack");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION
