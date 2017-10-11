@@ -11,9 +11,9 @@ branches:
     only:
         - master # this will also run pull requests
 
-before_build:
-- cmd: >-
-    "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
+#before_build:
+#- cmd: >-
+#    "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
 
 build_script:
 - ps: .\build.ps1 -ScriptArgs "-build_version='$env:APPVEYOR_BUILD_VERSION'"
@@ -23,3 +23,12 @@ test: off
 artifacts:
 - path: artifacts\*.nupkg
   name: NuGet
+
+deploy:
+- provider: NuGet
+  server: https://www.myget.org/F/kherr9/api/v2/package
+  api_key:
+    secure: VyHjv3mh6Ye9UlA6ErhBp0ptFzZRJW+nK2340ewJIAOuQPoYh4rw3bpWOc+7rIV6
+  skip_symbols: true
+  on:
+    branch: master
