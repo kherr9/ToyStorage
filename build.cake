@@ -12,6 +12,7 @@ var version = new Version(Argument("build_version", "0.0.0.0"));
 
 // Define directories.
 var buildDir = Directory("./src/ToyStorage/bin") + Directory(configuration);
+var artifactDir = Directory("./artifacts");
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -21,6 +22,7 @@ Task("Clean")
     .Does(() =>
 {
     CleanDirectory(buildDir);
+    CleanDirectory(artifactDir);
 });
 
 Task("Restore-NuGet-Packages")
@@ -61,7 +63,7 @@ Task("Pack")
 	DotNetCorePack("./src/ToyStorage", new DotNetCorePackSettings
 	{
 		Configuration = configuration,
-		OutputDirectory = "./artifacts/",
+		OutputDirectory = artifactDir,
 		NoBuild = true,
 		VersionSuffix = $"ci-{version.Revision}",
 		ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version.ToString(3)}")
@@ -71,7 +73,7 @@ Task("Pack")
 	DotNetCorePack("./src/ToyStorage", new DotNetCorePackSettings
 	{
 		Configuration = configuration,
-		OutputDirectory = "./artifacts/",
+		OutputDirectory = artifactDir,
 		NoBuild = true,
 		ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version.ToString(3)}")
 	});
@@ -83,7 +85,7 @@ Task("Pack")
 
 Task("Default")
 	.IsDependentOn("Build")
-    //.IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Run-Unit-Tests")
 	.IsDependentOn("Pack");
 
 //////////////////////////////////////////////////////////////////////
