@@ -14,7 +14,7 @@ namespace ToyStorage.UnitTests
         public DocumentCollectionTests()
         {
             var client = CloudStorageAccountHelper.CreateCloudBlobClient();
-            var container = client.GetContainerReference(this.GetType().Name.ToLowerInvariant());
+            var container = client.GetContainerReference(GetType().Name.ToLowerInvariant());
             container.CreateIfNotExistsAsync().Wait();
 
             var middleware = new Middleware();
