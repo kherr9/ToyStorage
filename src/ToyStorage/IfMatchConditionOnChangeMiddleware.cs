@@ -7,7 +7,7 @@ namespace ToyStorage
     /// <summary>
     /// Optimistic concurreny implementation using etags for conditional put and delete
     /// </summary>
-    public class IfMatchConditionOnWriteMiddleware : IMiddleware
+    public class IfMatchConditionOnChangeMiddleware : IMiddleware
     {
         private readonly ConcurrentDictionary<string, string> _etags = new ConcurrentDictionary<string, string>();
 
