@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace ToyStorage
@@ -14,5 +15,7 @@ namespace ToyStorage
         public byte[] Content { get; set; }
 
         public CloudBlockBlob CloudBlockBlob { get; set; }
+
+        public AccessCondition AccessCondition { get; set; }
     }
 }
