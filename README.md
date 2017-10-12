@@ -81,4 +81,7 @@ Now lets delete our entity
 await documentCollection.DeleteAsync("mario");
 ```
 
-Now we've deleted the blob `entities\mario`.
+The blob `entities\mario` as been deleted.
+
+## Middleware
+
