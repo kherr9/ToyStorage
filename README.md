@@ -121,7 +121,7 @@ middleware.Use(async (ctx, next) =>
 {
     Console.WriteLine($"Starting {ctx.RequestMethod} to {ctx.CloudBlockBlob.Name}");
 
-    await next(ctx);
+    await next();
 
     Console.WriteLine("Completed");
 });
@@ -136,7 +136,7 @@ public class LoggerMiddleware : IMiddleware
     {
         Console.WriteLine($"Starting {context.RequestMethod} to {context.CloudBlockBlob.Name}");
 
-        await next(context);
+        await next();
 
         Console.WriteLine("Completed");
     }

@@ -27,7 +27,7 @@ namespace ToyStorage.UnitTests
             middleware.Use(async (ctx, next) =>
             {
                 ctx.Entity = "this is a string";
-                await next(ctx);
+                await next();
                 ctx.EntityType = typeof(string);
             });
 
@@ -48,14 +48,14 @@ namespace ToyStorage.UnitTests
             middleware.Use(async (ctx, next) =>
             {
                 ctx.Entity = "this is a string";
-                await next(ctx);
+                await next();
                 ctx.EntityType = typeof(string); // this will override the previous value
             });
 
             middleware.Use(async (ctx, next) =>
             {
                 ctx.Entity = 45; // this will override the previous value
-                await next(ctx);
+                await next();
                 ctx.EntityType = typeof(int);
             });
 
@@ -85,7 +85,7 @@ namespace ToyStorage.UnitTests
             {
                 // this method should NOT be invoked
                 ctx.Entity = 45;
-                await next(ctx);
+                await next();
                 ctx.EntityType = typeof(int);
             });
 

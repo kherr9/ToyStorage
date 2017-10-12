@@ -13,7 +13,7 @@ namespace ToyStorage
                 Validator.ValidateObject(entity, new ValidationContext(entity), true);
             }
 
-            return next(context);
+            return next();
         }
     }
 }

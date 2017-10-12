@@ -22,7 +22,7 @@ namespace ToyStorage
                     throw new InvalidOperationException($"Unknown {nameof(context.RequestMethod)} '{context.RequestMethod}'");
             }
 
-            await next(context);
+            await next();
         }
 
         private async Task OnGetAsync(RequestContext context)
