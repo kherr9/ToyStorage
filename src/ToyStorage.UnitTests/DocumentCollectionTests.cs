@@ -30,15 +30,15 @@ namespace ToyStorage.UnitTests
         }
 
         [Fact]
-        public async Task TestStoreGetDelete()
+        public async Task TestPutGetDelete()
         {
             // Arrange
             var entity = GenerateEntity();
 
             // Act
-            await _documentCollection.StoreAsync(entity, entity.Id);
+            await _documentCollection.PutAsync(entity, entity.Id);
             var entityClone = await _documentCollection.GetAsync<Entity>(entity.Id);
-            await _documentCollection.StoreAsync(entity, entity.Id);
+            await _documentCollection.PutAsync(entity, entity.Id);
             await _documentCollection.DeleteAsync(entity.Id);
 
             // Assert
@@ -47,14 +47,14 @@ namespace ToyStorage.UnitTests
         }
 
         [Fact]
-        public async Task TestStoreWithValidationError()
+        public async Task TestPutWithValidationError()
         {
             // Arrange
             var entity = GenerateEntity();
             entity.Name = null;
 
             // Act
-            var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _documentCollection.StoreAsync(entity, entity.Id));
+            var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _documentCollection.PutAsync(entity, entity.Id));
 
             // Assert
             Assert.NotNull(exception);
