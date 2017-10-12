@@ -33,7 +33,7 @@ namespace ToyStorage
             return (TEntity)context.Entity;
         }
 
-        public Task StoreAsync(object entity, string id)
+        public Task PutAsync(object entity, string id)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
             if (id == null) throw new ArgumentNullException(nameof(id));

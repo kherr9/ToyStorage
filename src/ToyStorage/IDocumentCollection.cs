@@ -6,7 +6,7 @@ namespace ToyStorage
     {
         Task<TEntity> GetAsync<TEntity>(string id);
 
-        Task StoreAsync(object entity, string id);
+        Task PutAsync(object entity, string id);
 
         Task DeleteAsync(string id);
     }
