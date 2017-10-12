@@ -39,25 +39,57 @@ namespace ToyStorage.UnitTests
         }
 
         [Fact]
-        public async Task TestPutWhenResourceHasChangedBetweenRead()
+        public async Task TestPutWhenResourceHasChangedBetweenGetAndPut()
         {
             // Assert
             var entity = GenerateEntity();
 
             await _documentCollection.PutAsync(entity, entity.Id);
 
-            var otherDocumentCollection = CreateDocumentCollection();
-            var otherEntity = await otherDocumentCollection.GetAsync<Entity>(entity.Id);
-            otherEntity.Name = "foo";
-            await otherDocumentCollection.PutAsync(otherEntity, entity.Id);
+            await ModifyEntityInDifferentDocumentCollectionAsync(entity.Id);
 
             // Act
-            entity.Name = "bar";
             var exception = await Assert.ThrowsAsync<StorageException>(async () => await _documentCollection.PutAsync(entity, entity.Id));
 
             // Assert
             Assert.NotNull(exception);
             Assert.Equal((int)HttpStatusCode.PreconditionFailed, exception.RequestInformation.HttpStatusCode);
+        }
+
+        [Fact]
+        public async Task TestDeleteWhenResourceHasChangedBetweenGetAndDelete()
+        {
+            // Assert
+            var entity = GenerateEntity();
+
+            await _documentCollection.PutAsync(entity, entity.Id);
+
+            await ModifyEntityInDifferentDocumentCollectionAsync(entity.Id);
+
+            // Act
+            var exception = await Assert.ThrowsAsync<StorageException>(async () => await _documentCollection.DeleteAsync(entity.Id));
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.Equal((int)HttpStatusCode.PreconditionFailed, exception.RequestInformation.HttpStatusCode);
+        }
+        
+        [Fact]
+        public async Task TestGetWhenResourceHasChangedBetweenGetAndGet()
+        {
+            // Assert
+            var entity = GenerateEntity();
+
+            await _documentCollection.PutAsync(entity, entity.Id);
+
+            await ModifyEntityInDifferentDocumentCollectionAsync(entity.Id);
+
+            // Act
+            // should not throw exception
+            var otherEntity = await _documentCollection.GetAsync<Entity>(entity.Id);
+
+            // Assert
+            Assert.NotEqual(entity, otherEntity);
         }
 
         private DocumentCollection CreateDocumentCollection()
@@ -81,6 +113,14 @@ namespace ToyStorage.UnitTests
                 Id = Guid.NewGuid().ToString(),
                 Name = Guid.NewGuid().ToString()
             };
+        }
+
+        private async Task ModifyEntityInDifferentDocumentCollectionAsync(string entityId)
+        {
+            var documentCollection = CreateDocumentCollection();
+            var entity = await documentCollection.GetAsync<Entity>(entityId);
+            entity.Name = "foo";
+            await documentCollection.PutAsync(entity, entity.Id);
         }
 
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
