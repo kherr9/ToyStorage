@@ -97,19 +97,19 @@ The minimal requirements for middleware to accomplish:
 
 You can add other middleware components to do just about anything else required for your application, like validation, compression, optimistic concurrency, caching, logging, security, etc.
 
-Toy Storage has the following middleware:
-* Built-in middleware
-* Appliction middleware
+#### Ordering
+
+The order that middleware components are added in `Use` method defines the order in which they are invoked on requests, and the reverse order for the response. This ordering is critical for security, performance, and functionality.
 
 #### Built-in middleware
 
-Toy Storage comes with some basic middleware components that cover some basic use cases.
+Toy Storage comes with some basic middleware components that cover some common use cases.
 * BlobStorageMiddleware - Handles the actual Read/Write/Delete commands to blobs.
 * GZipMiddleware - Compress requests and decompress responses.
 * JsonFormaterMiddleware - Formats request to json and response from json.
 * ValidationMiddleware - Validates request object with Data Annotation Validation
 
-#### Application middleware
+#### Writing middleware
 
 You can easily write your own middleware components.
 
