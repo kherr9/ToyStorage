@@ -75,7 +75,7 @@ await documentCollection.StoreAsync(entity, "mario");
 
 The blob `entities\mario` is overwritten with our updated entity.
 
-Now lets delete our entity
+Now delete our entity
 
 ```C#
 await documentCollection.DeleteAsync("mario");
