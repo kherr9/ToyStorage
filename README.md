@@ -6,7 +6,7 @@ Toy Storage is a lightweight and extensible data access framework for Azure Blob
 
 ## Get Packages
 
-Toy Storage is still in early development and has not been published to NuGet, but if you're feeling adventurous, [continous integration builds are on MyGet](https://www.myget.org/feed/kherr9/package/nuget/ToyStorage).
+Toy Storage is still in early development and has not been published to NuGet, but if you're feeling adventurous, [continuous integration builds are on MyGet](https://www.myget.org/feed/kherr9/package/nuget/ToyStorage).
 
 ## Get Started
 
@@ -54,7 +54,7 @@ await documentCollection.StoreAsync(entity, id);
 
 The entity has been serialized to `JSON`, then written to the blob `mario` inside the container `entities`. Like `entities\mario`;
 
-Now lets read our entity
+Now read our entity
 
 ```C#
 var entity = documentCollection.GetAsync<MyClass>("mario");
@@ -65,7 +65,7 @@ Console.WriteLine($"I have {entity.Name}");
 
 The blob has been read from `entities\mario`, then deserialized as type `MyClass`.
 
-Now lets update our entity
+Now update our entity
 
 ```C#
 enity.Profession = "Adventurer";
@@ -95,7 +95,7 @@ The minimal requirements for middleware to accomplish:
 * Format request object to a binary representation (serialize) and format binary response to object (deserialize).
 * Handle Read/Write/Delete commands to blob storage.
 
-You can add other middleware components to do just about anything  required for your application, like validation, compression, optimistic concurrency, caching, logging, security, etc.
+You can add other middleware components to do just about anything required for your application, like validation, compression, optimistic concurrency, caching, logging, security, etc.
 
 #### Ordering
 
@@ -106,7 +106,7 @@ The order that middleware components are added in `Use` method defines the order
 Toy Storage comes with some basic middleware components that cover some common use cases.
 * BlobStorageMiddleware - Handles the actual Read/Write/Delete commands to blobs.
 * GZipMiddleware - Compress requests and decompress responses.
-* JsonFormaterMiddleware - Formats request to json and response from json.
+* JsonFormaterMiddleware - Formats request to JSON and response from JSON.
 * ValidationMiddleware - Validates request object with Data Annotation Validation
 
 #### Writing middleware
