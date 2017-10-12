@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Xunit;
@@ -15,7 +16,7 @@ namespace ToyStorage.UnitTests
         {
             _documentCollection = CreateDocumentCollection();
         }
-        
+
         [Fact]
         public async Task TestPutGetDelete()
         {
@@ -25,10 +26,10 @@ namespace ToyStorage.UnitTests
             // Act
             // create
             await _documentCollection.PutAsync(entity, entity.Id);
-            
+
             // get
             entity = await _documentCollection.GetAsync<Entity>(entity.Id);
-            
+
             // update
             entity.Name = Guid.NewGuid().ToString();
             await _documentCollection.PutAsync(entity, entity.Id);
@@ -52,10 +53,11 @@ namespace ToyStorage.UnitTests
 
             // Act
             entity.Name = "bar";
-            var exception = await Assert.ThrowsAsync<ArithmeticException>(async () => await _documentCollection.PutAsync(entity, entity.Id));
+            var exception = await Assert.ThrowsAsync<StorageException>(async () => await _documentCollection.PutAsync(entity, entity.Id));
 
             // Assert
             Assert.NotNull(exception);
+            Assert.Equal((int)HttpStatusCode.PreconditionFailed, exception.RequestInformation.HttpStatusCode);
         }
 
         private DocumentCollection CreateDocumentCollection()
