@@ -7,18 +7,6 @@ using Xunit;
 
 namespace ToyStorage.UnitTests
 {
-    public class LoggerMiddleware : IMiddleware
-    {
-        public async Task Invoke(RequestContext context, RequestDelegate next)
-        {
-            Console.WriteLine($"Starting {context.RequestMethod} to {context.CloudBlockBlob.Name}");
-
-            await next(context);
-
-            Console.WriteLine("Completed");
-        }
-    }
-
     public class DocumentCollectionTests
     {
         private readonly DocumentCollection _documentCollection;
@@ -37,15 +25,6 @@ namespace ToyStorage.UnitTests
             });
             middleware.Use<GZipMiddleware>();
             middleware.Use<BlobStorageMiddleware>();
-
-            middleware.Use(async (ctx, next) =>
-            {
-                Console.WriteLine($"Starting {ctx.RequestMethod} to {ctx.CloudBlockBlob.Name}");
-
-                await next(ctx);
-
-                Console.WriteLine("Completed");
-            });
 
             _documentCollection = new DocumentCollection(container, middleware);
         }
