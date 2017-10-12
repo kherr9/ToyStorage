@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace ToyStorage
 {
@@ -38,12 +39,12 @@ namespace ToyStorage
 
         private async Task OnPutAsync(RequestContext context)
         {
-            await context.CloudBlockBlob.UploadFromByteArrayAsync(context.Content, 0, context.Content.Length);
+            await context.CloudBlockBlob.UploadFromByteArrayAsync(context.Content, 0, context.Content.Length, context.AccessCondition, null, null);
         }
 
         private Task OnDeleteAsync(RequestContext context)
         {
-            return context.CloudBlockBlob.DeleteAsync();
+            return context.CloudBlockBlob.DeleteAsync(DeleteSnapshotsOption.None, context.AccessCondition, null, null);
         }
     }
 }

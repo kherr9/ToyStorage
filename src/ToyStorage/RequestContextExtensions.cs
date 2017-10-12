@@ -11,5 +11,10 @@
         {
             return context.RequestMethod == RequestMethods.Put;
         }
+
+        public static bool IsDelete(this RequestContext context)
+        {
+            return context.RequestMethod == RequestMethods.Delete;
+        }
     }
 }
