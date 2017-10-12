@@ -107,7 +107,7 @@ Toy Storage comes with some basic middleware components that cover some common u
 * BlobStorageMiddleware - Handles the actual Read/Write/Delete commands to blobs.
 * GZipMiddleware - Compress requests and decompress responses.
 * JsonFormaterMiddleware - Formats request to JSON and response from JSON.
-* ValidationMiddleware - Validates request object with Data Annotation Validation
+* ValidationMiddleware - Validates request object with Data Annotation Validation.
 
 #### Writing middleware
 
