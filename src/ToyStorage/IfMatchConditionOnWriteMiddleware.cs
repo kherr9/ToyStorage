@@ -13,9 +13,9 @@ namespace ToyStorage
 
         public async Task Invoke(RequestContext context, RequestDelegate next)
         {
-            if (context.IsWrite() || context.IsDelete())
+            if ((context.IsWrite() || context.IsDelete()) && context.AccessCondition == null)
             {
-                AppendIfMatchConditionIfETagExists(context);
+                SetIfMatchConditionIfETagExists(context);
             }
 
             await next();
@@ -26,7 +26,7 @@ namespace ToyStorage
             }
         }
 
-        private void AppendIfMatchConditionIfETagExists(RequestContext context)
+        private void SetIfMatchConditionIfETagExists(RequestContext context)
         {
             var name = context.CloudBlockBlob.Name;
 
