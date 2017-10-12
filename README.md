@@ -3,6 +3,7 @@
 Toy Storage is a lightweight and extensible data access framework for Azure Blob Storage.
 
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/kherr9/toystorage)](https://ci.appveyor.com/project/kherr9/toystorage)
+[![MyGet (dev)](https://img.shields.io/myget/kherr9/v/ToyStorage.svg)](https://myget.org/feed/kherr9/package/nuget/ToyStorage)
 
 ## Get Packages
 
