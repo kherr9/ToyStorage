@@ -85,3 +85,62 @@ The blob `entities\mario` as been deleted.
 
 ## Middleware
 
+Middleware components can perform the following tasks:
+* Execute any code.
+* Make changes to the request and the response objects.
+* End the request-response cycle.
+* Call the next middleware component in the stack.
+
+The minimal requirements for middleware to accomplish:
+* Format request object to a binary representation (serialize) and format binary response to object (derialize).
+* Handle Read/Write/Delete commands to blob storage
+
+You can add other middleware components to do just about anything else required for your application, like validation, compression, optimistic concurrency, caching, logging, security, etc.
+
+Toy Storage has the following middleware:
+* Built-in middleware
+* Appliction middleware
+
+#### Built-in middleware
+
+Toy Storage comes with some basic middleware components that cover some basic use cases.
+* BlobStorageMiddleware - Handles the actual Read/Write/Delete commands to blobs.
+* GZipMiddleware - Compress requests and decompress responses.
+* JsonFormaterMiddleware - Formats request to json and response from json.
+* ValidationMiddleware - Validates request object with Data Annotation Validation
+
+#### Application middleware
+
+You can easily write your own middleware components.
+
+Write a lambda
+
+```C#
+middleware.Use(async (ctx, next) =>
+{
+    Console.WriteLine($"Starting {ctx.RequestMethod} to {ctx.CloudBlockBlob.Name}");
+
+    await next(ctx);
+
+    Console.WriteLine("Completed");
+});
+```
+
+Implement `IMiddleware`
+
+```C#
+public class LoggerMiddleware : IMiddleware
+{
+    public async Task Invoke(RequestContext context, RequestDelegate next)
+    {
+        Console.WriteLine($"Starting {context.RequestMethod} to {context.CloudBlockBlob.Name}");
+
+        await next(context);
+
+        Console.WriteLine("Completed");
+    }
+}
+
+middleware.Use<LoggerMiddleware>();
+
+```
