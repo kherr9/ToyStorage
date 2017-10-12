@@ -92,10 +92,10 @@ Middleware components can perform the following tasks:
 * Call the next middleware component in the stack.
 
 The minimal requirements for middleware to accomplish:
-* Format request object to a binary representation (serialize) and format binary response to object (derialize).
-* Handle Read/Write/Delete commands to blob storage
+* Format request object to a binary representation (serialize) and format binary response to object (deserialize).
+* Handle Read/Write/Delete commands to blob storage.
 
-You can add other middleware components to do just about anything else required for your application, like validation, compression, optimistic concurrency, caching, logging, security, etc.
+You can add other middleware components to do just about anything  required for your application, like validation, compression, optimistic concurrency, caching, logging, security, etc.
 
 #### Ordering
 
