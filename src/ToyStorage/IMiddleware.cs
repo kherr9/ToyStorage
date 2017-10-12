@@ -2,7 +2,7 @@
 
 namespace ToyStorage
 {
-    public delegate Task RequestDelegate(RequestContext context);
+    public delegate Task RequestDelegate();
 
     public interface IMiddleware
     {

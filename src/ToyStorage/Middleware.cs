@@ -44,7 +44,7 @@ namespace ToyStorage
 
             return context =>
             {
-                Task Next(RequestContext otherContext)
+                Task Next()
                 {
                     exectionIndex++;
                     if (exectionIndex >= list.Length)

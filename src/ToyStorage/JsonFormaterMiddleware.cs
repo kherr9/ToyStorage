@@ -32,7 +32,7 @@ namespace ToyStorage
                 context.CloudBlockBlob.Properties.ContentType = JsonContentType;
             }
 
-            await next(context);
+            await next();
 
             if (context.IsRead() && context.CloudBlockBlob.Properties.ContentType == JsonContentType)
             {
