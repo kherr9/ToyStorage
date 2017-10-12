@@ -37,6 +37,48 @@ The `Middleware` components have access to the request, the response, and the ne
 
 The `CloudBlobContainer` provides a grouping of a set of [blobs](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-dotnet-how-to-use-blobs). This is part of the [WindowsAzure.Storage library](https://www.nuget.org/packages/WindowsAzure.Storage/).
 
-```C#
+Now that we have our `DocumentContainer`, let's store an entity.
 
+```C#
+var entity = new MyClass()
+{
+    Name = "Mario",
+    Profession = "Plumber",
+    FavoriteColor = "Red"
+};
+
+var id = "mario"
+
+await documentCollection.StoreAsync(entity, id);
 ```
+
+The entity has been serialized to `JSON`, then written to the container `entities` and blob `mario`. `entities\mario`;
+
+Now lets read our entity
+
+```C#
+var entity = documentCollection.GetAsync<MyClass>("mario");
+
+Console.WriteLine($"I have {entity.Name}");
+// "I have Mario"
+```
+
+The blob has been read from `entities\mario`, then deserialized as type `MyClass`.
+
+Now lets update our entity
+
+```C#
+enity.Profession = "Adventurer";
+
+await documentCollection.StoreAsync(entity, "mario");
+```
+
+Here we overwrite the blob `entities\mario` with our updated entity.
+
+Now lets delete our entity
+
+```C#
+await documentCollection.DeleteAsync("mario");
+```
+
+Now we've deleted the blob `entities\mario`.
