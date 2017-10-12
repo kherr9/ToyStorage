@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage;
 using Xunit;
 
 namespace ToyStorage.UnitTests
@@ -12,18 +13,9 @@ namespace ToyStorage.UnitTests
 
         public IfMatchConditionOnChangeMiddlewareTests()
         {
-            var client = CloudStorageAccountHelper.CreateCloudBlobClient();
-            var container = client.GetContainerReference(GetType().Name.ToLowerInvariant());
-            container.CreateIfNotExistsAsync().Wait();
-
-            var middleware = new Middleware();
-            middleware.Use<IfMatchConditionOnChangeMiddleware>();
-            middleware.UseJsonFormatter();
-            middleware.Use<BlobStorageMiddleware>();
-
-            _documentCollection = new DocumentCollection(container, middleware);
+            _documentCollection = CreateDocumentCollection();
         }
-
+        
         [Fact]
         public async Task TestPutGetDelete()
         {
@@ -43,6 +35,41 @@ namespace ToyStorage.UnitTests
 
             // delete
             await _documentCollection.DeleteAsync(entity.Id);
+        }
+
+        [Fact]
+        public async Task TestPutWhenResourceHasChangedBetweenRead()
+        {
+            // Assert
+            var entity = GenerateEntity();
+
+            await _documentCollection.PutAsync(entity, entity.Id);
+
+            var otherDocumentCollection = CreateDocumentCollection();
+            var otherEntity = await otherDocumentCollection.GetAsync<Entity>(entity.Id);
+            otherEntity.Name = "foo";
+            await otherDocumentCollection.PutAsync(otherEntity, entity.Id);
+
+            // Act
+            entity.Name = "bar";
+            var exception = await Assert.ThrowsAsync<ArithmeticException>(async () => await _documentCollection.PutAsync(entity, entity.Id));
+
+            // Assert
+            Assert.NotNull(exception);
+        }
+
+        private DocumentCollection CreateDocumentCollection()
+        {
+            var client = CloudStorageAccountHelper.CreateCloudBlobClient();
+            var container = client.GetContainerReference(GetType().Name.ToLowerInvariant());
+            container.CreateIfNotExistsAsync().Wait();
+
+            var middleware = new Middleware();
+            middleware.Use<IfMatchConditionOnChangeMiddleware>();
+            middleware.UseJsonFormatter();
+            middleware.Use<BlobStorageMiddleware>();
+
+            return new DocumentCollection(container, middleware);
         }
 
         private Entity GenerateEntity()
