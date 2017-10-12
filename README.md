@@ -33,7 +33,7 @@ await container.CreateIfNotExistsAsync();
 var documentCollection = new DocumentCollection(container, middleware);
 ```
 
-The `Middleware` components have access to the request, the response, and the next middleware component in the request-response cycle. This model is used in popluar frameworks, such as [Express](http://expressjs.com/en/guide/using-middleware.html) and [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware?tabs=aspnetcore2x).
+The `Middleware` components have access to the request, the response, and the next middleware component in the request-response cycle. This pattern is used in frameworks, such as [Express](http://expressjs.com/en/guide/using-middleware.html) and [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware?tabs=aspnetcore2x).
 
 The `CloudBlobContainer` provides a grouping of a set of [blobs](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-dotnet-how-to-use-blobs). This is part of the [WindowsAzure.Storage library](https://www.nuget.org/packages/WindowsAzure.Storage/).
 
@@ -52,7 +52,7 @@ var id = "mario"
 await documentCollection.StoreAsync(entity, id);
 ```
 
-The entity has been serialized to `JSON`, then written to the container `entities` and blob `mario`. `entities\mario`;
+The entity has been serialized to `JSON`, then written to the blob `mario` inside the container `entities`. Like `entities\mario`;
 
 Now lets read our entity
 
@@ -73,7 +73,7 @@ enity.Profession = "Adventurer";
 await documentCollection.StoreAsync(entity, "mario");
 ```
 
-Here we overwrite the blob `entities\mario` with our updated entity.
+The blob `entities\mario` is overwritten with our updated entity.
 
 Now lets delete our entity
 
