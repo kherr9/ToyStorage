@@ -20,10 +20,7 @@ namespace ToyStorage
 
             await next();
 
-            if (context.IsRead())
-            {
-                SaveETagFromResponse(context);
-            }
+            AddOrRemoveETagFromCache(context);
         }
 
         private void SetIfMatchConditionIfETagExists(RequestContext context)
@@ -36,12 +33,21 @@ namespace ToyStorage
             }
         }
 
-        private void SaveETagFromResponse(RequestContext context)
+        private void AddOrRemoveETagFromCache(RequestContext context)
         {
             var name = context.CloudBlockBlob.Name;
-            var etag = context.CloudBlockBlob.Properties.ETag;
+            
+            if (context.IsDelete())
+            {
+                // there is no ETag after a blob has been deleted
+                _etags.TryRemove(name, out _);
+            }
+            else
+            {
+                var etag = context.CloudBlockBlob.Properties.ETag;
 
-            _etags.AddOrUpdate(name, etag, (key, oldValue) => etag);
+                _etags.AddOrUpdate(name, etag, (key, oldValue) => etag);
+            }
         }
     }
 }
