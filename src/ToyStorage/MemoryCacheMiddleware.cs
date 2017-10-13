@@ -15,14 +15,15 @@ namespace ToyStorage
 
         public async Task Invoke(RequestContext context, RequestDelegate next)
         {
+            // Request
             CacheEntry cacheEntry = null;
             if (context.IsRead() && _cache.TryGetValue(context.CloudBlockBlob.Name, out cacheEntry) && cacheEntry != null)
             {
                 // add If-None-Match for conditional GET
                 context.AccessCondition = AccessCondition.GenerateIfNoneMatchCondition(cacheEntry.ETag);
             }
-
-            // catch precondition failed?
+            
+            // Next
             bool notModified = false;
             try
             {
@@ -41,6 +42,7 @@ namespace ToyStorage
                 }
             }
 
+            // Response
             if (notModified)
             {
                 // content has not been modified, so read cache
