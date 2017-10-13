@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
@@ -23,7 +21,7 @@ namespace ToyStorage.UnitTests
         public async Task TestPutGetDelete()
         {
             // Arrange
-            var entity = GenerateEntity();
+            var entity = Entity.GenerateEntity();
 
             // Act
             // create
@@ -44,7 +42,7 @@ namespace ToyStorage.UnitTests
         public async Task TestPutWhenResourceHasChangedBetweenGetAndPut()
         {
             // Assert
-            var entity = GenerateEntity();
+            var entity = Entity.GenerateEntity();
 
             await _documentCollection.PutAsync(entity, entity.Id);
 
@@ -62,7 +60,7 @@ namespace ToyStorage.UnitTests
         public async Task TestDeleteWhenResourceHasChangedBetweenGetAndDelete()
         {
             // Assert
-            var entity = GenerateEntity();
+            var entity = Entity.GenerateEntity();
 
             await _documentCollection.PutAsync(entity, entity.Id);
 
@@ -80,7 +78,7 @@ namespace ToyStorage.UnitTests
         public async Task TestGetWhenResourceHasChangedBetweenGetAndGet()
         {
             // Assert
-            var entity = GenerateEntity();
+            var entity = Entity.GenerateEntity();
 
             await _documentCollection.PutAsync(entity, entity.Id);
 
@@ -104,55 +102,12 @@ namespace ToyStorage.UnitTests
             return new DocumentCollection(_cloudStorageFixture.CloudBlobContainer, middleware);
         }
 
-        private Entity GenerateEntity()
-        {
-            return new Entity()
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = Guid.NewGuid().ToString()
-            };
-        }
-
         private async Task ModifyEntityInDifferentDocumentCollectionAsync(string entityId)
         {
             var documentCollection = CreateDocumentCollection();
             var entity = await documentCollection.GetAsync<Entity>(entityId);
             entity.Name = "foo";
             await documentCollection.PutAsync(entity, entity.Id);
-        }
-
-        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
-        class Entity
-        {
-            [Required]
-            public string Id { get; set; }
-
-            [Required]
-            public string Name { get; set; }
-
-            public override bool Equals(object obj)
-            {
-                if (!(obj is Entity other))
-                {
-                    return false;
-                }
-
-                return Equals(other);
-            }
-
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    return ((Id != null ? Id.GetHashCode() : 0) * 397) ^ (Name != null ? Name.GetHashCode() : 0);
-                }
-            }
-
-            private bool Equals(Entity other)
-            {
-                return string.Equals(Id, other.Id) && string.Equals(Name, other.Name);
-            }
         }
     }
 }
