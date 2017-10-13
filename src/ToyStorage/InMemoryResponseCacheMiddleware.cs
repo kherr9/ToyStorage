@@ -85,7 +85,7 @@ namespace ToyStorage
             else if (context.IsRead() || context.IsWrite())
             {
                 // either resource was not in cache or resource has been modified
-                WriteToCache(context);
+                await WriteToCacheAsync(context);
             }
             else if (context.IsDelete())
             {
@@ -94,8 +94,10 @@ namespace ToyStorage
             }
         }
 
-        private void WriteToCache(RequestContext context)
+        private async Task WriteToCacheAsync(RequestContext context)
         {
+            await context.CloudBlockBlob.FetchAttributesAsync();
+
             var cacheEntry = new CacheEntry(context.CloudBlockBlob.Properties.ETag, context.Content);
 
             _cache.Set(context.CloudBlockBlob.Name, cacheEntry);

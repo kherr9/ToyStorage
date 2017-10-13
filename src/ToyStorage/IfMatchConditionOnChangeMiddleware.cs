@@ -20,7 +20,7 @@ namespace ToyStorage
 
             await next();
 
-            AddOrRemoveETagFromCache(context);
+            await AddOrRemoveETagFromCacheAsync(context);
         }
 
         private void SetIfMatchConditionIfETagExists(RequestContext context)
@@ -33,10 +33,10 @@ namespace ToyStorage
             }
         }
 
-        private void AddOrRemoveETagFromCache(RequestContext context)
+        private async Task AddOrRemoveETagFromCacheAsync(RequestContext context)
         {
             var name = context.CloudBlockBlob.Name;
-            
+
             if (context.IsDelete())
             {
                 // there is no ETag after a blob has been deleted
@@ -44,6 +44,7 @@ namespace ToyStorage
             }
             else
             {
+                await context.CloudBlockBlob.FetchAttributesAsync();
                 var etag = context.CloudBlockBlob.Properties.ETag;
 
                 _etags.AddOrUpdate(name, etag, (key, oldValue) => etag);
