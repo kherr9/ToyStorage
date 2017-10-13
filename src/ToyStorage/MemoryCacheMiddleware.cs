@@ -45,7 +45,7 @@ namespace ToyStorage
             // Response
             if (notModified)
             {
-                // content has not been modified, so read cache
+                // content has not been modified, so use cache
                 // ReSharper disable once PossibleNullReferenceException
                 context.Content = cacheEntry.Content;
             }
