@@ -8,7 +8,7 @@ namespace ToyStorage.UnitTests
     {
         public CloudStorageFixture()
         {
-            var cloudStorageAccount = CloudStorageAccount.Parse("UseDevelopmentStorage=true;DevelopmentStorageProxyUri=http://ipv4.fiddler");
+            var cloudStorageAccount = CloudStorageAccount.Parse("UseDevelopmentStorage=true;");
 
             var cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
 
