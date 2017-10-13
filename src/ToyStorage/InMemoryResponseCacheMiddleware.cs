@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 #if NET45
 using System.Runtime.Caching;
 #endif
@@ -109,8 +110,8 @@ namespace ToyStorage
         {
             public CacheEntry(string etag, byte[] content)
             {
-                ETag = etag;
-                Content = content;
+                ETag = etag ?? throw new ArgumentNullException(nameof(etag));
+                Content = content ?? throw new ArgumentNullException(nameof(content));
             }
 
             public string ETag { get; }
