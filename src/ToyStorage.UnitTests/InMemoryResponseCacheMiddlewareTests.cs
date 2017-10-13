@@ -6,7 +6,7 @@ using Xunit;
 
 namespace ToyStorage.UnitTests
 {
-    public class MemoryCacheMiddlewareTests
+    public class InMemoryResponseCacheMiddlewareTests
     {
         [Fact]
         public async Task TestGetGet()
@@ -112,7 +112,7 @@ namespace ToyStorage.UnitTests
 
             var middleware = new Middleware();
             middleware.UseJsonFormatter();
-            middleware.Use<MemoryCacheMiddleware>();
+            middleware.Use<InMemoryResponseCacheMiddleware>();
             middleware.Use<BlobStorageMiddleware>();
 
             return new DocumentCollection(container, middleware);

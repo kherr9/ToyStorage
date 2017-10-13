@@ -1,5 +1,11 @@
 ﻿using System.Net;
+#if NET45
+using System.Runtime.Caching;
+#endif
 using System.Threading.Tasks;
+#if NETSTANDARD1_3
+using Microsoft.Extensions.Caching.Memory;
+#endif
 using Microsoft.WindowsAzure.Storage;
 
 namespace ToyStorage
@@ -10,14 +16,34 @@ namespace ToyStorage
     /// <remarks>
     /// Must be placed after formatter, so that the formatter can deserialize the cached response body.
     /// </remarks>
-    public class MemoryCacheMiddleware : IMiddleware
+    public class InMemoryResponseCacheMiddleware : IMiddleware
     {
         private readonly ICache _cache;
 
-        public MemoryCacheMiddleware()
+        public InMemoryResponseCacheMiddleware()
+            : this(Cache.CreateCache())
         {
-            _cache = Cache.CreateCache();
         }
+
+#if NETSTANDARD1_3
+        public InMemoryResponseCacheMiddleware(IMemoryCache memoryCache)
+            : this(new Cache(memoryCache))
+        {
+        }
+#endif
+
+#if NET45
+        public InMemoryResponseCacheMiddleware(ObjectCache objectCache)
+            : this(new Cache(objectCache))
+        {
+        }
+#endif
+
+        private InMemoryResponseCacheMiddleware(ICache cache)
+        {
+            _cache = cache;
+        }
+
 
         public async Task Invoke(RequestContext context, RequestDelegate next)
         {
