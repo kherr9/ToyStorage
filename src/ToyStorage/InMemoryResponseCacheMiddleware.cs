@@ -25,16 +25,16 @@ namespace ToyStorage
         {
         }
 
-#if NETSTANDARD1_3
-        public InMemoryResponseCacheMiddleware(IMemoryCache memoryCache)
-            : this(new Cache(memoryCache))
+#if NET45
+        public InMemoryResponseCacheMiddleware(ObjectCache objectCache)
+            : this(new Cache(objectCache))
         {
         }
 #endif
 
-#if NET45
-        public InMemoryResponseCacheMiddleware(ObjectCache objectCache)
-            : this(new Cache(objectCache))
+#if NETSTANDARD1_3
+        public InMemoryResponseCacheMiddleware(IMemoryCache memoryCache)
+            : this(new Cache(memoryCache))
         {
         }
 #endif
