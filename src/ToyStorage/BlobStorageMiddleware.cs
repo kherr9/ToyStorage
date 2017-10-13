@@ -32,7 +32,7 @@ namespace ToyStorage
 
             var buffer = new byte[context.CloudBlockBlob.Properties.Length];
 
-            await context.CloudBlockBlob.DownloadToByteArrayAsync(buffer, 0);
+            await context.CloudBlockBlob.DownloadToByteArrayAsync(buffer, 0, context.AccessCondition, null, null);
 
             context.Content = buffer;
         }

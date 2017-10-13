@@ -23,6 +23,11 @@
             _objectCache.Set(key, value, new CacheItemPolicy());
         }
 
+        public void Remove(string key)
+        {
+            _objectCache.Remove(key);
+        }
+
         public static Cache CreateCache()
         {
             var memoryCache = MemoryCache.Default;
@@ -51,6 +56,11 @@
         public void Set<TItem>(string key, TItem value)
         {
             _memoryCache.Set(key, value);
+        }
+
+        public void Remove(string key)
+        {
+            _memoryCache.Remove(key);
         }
 
         public static Cache CreateCache()

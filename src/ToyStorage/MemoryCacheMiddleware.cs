@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 
 namespace ToyStorage
@@ -7,44 +8,80 @@ namespace ToyStorage
     {
         private readonly ICache _cache;
 
-        public MemoryCacheMiddleware(ICache cache)
+        public MemoryCacheMiddleware()
         {
-            _cache = cache;
+            _cache = Cache.CreateCache();
         }
 
         public async Task Invoke(RequestContext context, RequestDelegate next)
         {
-            CacheEntry cacheEntry;
-            if (context.IsRead() && _cache.TryGetValue(context.CloudBlockBlob.Name, out cacheEntry))
+            CacheEntry cacheEntry = null;
+            if (context.IsRead() && _cache.TryGetValue(context.CloudBlockBlob.Name, out cacheEntry) && cacheEntry != null)
             {
                 // add If-None-Match for conditional GET
-                context.AccessCondition = AccessCondition.GenerateIfNoneMatchCondition(cacheEntry.RequestContext.CloudBlockBlob.Properties.ETag);
+                context.AccessCondition = AccessCondition.GenerateIfNoneMatchCondition(cacheEntry.ETag);
             }
 
             // catch precondition failed?
-            await next();
-
-            if (context.IsRead())
+            bool notModified = false;
+            try
             {
+                await next();
+            }
+            catch (StorageException ex)
+            {
+                if (ex.RequestInformation.HttpStatusCode == (int)HttpStatusCode.NotModified)
+                {
+                    // resource not modified, so we can use cache copy
+                    notModified = true;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            if (notModified)
+            {
+                // content has not been modified, so read cache
+                // ReSharper disable once PossibleNullReferenceException
+                context.Content = cacheEntry.Content;
+            }
+            else if (context.IsRead() || context.IsWrite())
+            {
+                // either resource was not in cache or resource has been modified
                 WriteToCache(context);
+            }
+            else if (context.IsDelete())
+            {
+                // remove from cache if the resource has been deleted
+                DeleteCacheIfExists(context);
             }
         }
 
         private void WriteToCache(RequestContext context)
         {
-            var cacheEntry = new CacheEntry(context);
+            var cacheEntry = new CacheEntry(context.CloudBlockBlob.Properties.ETag, context.Content);
 
             _cache.Set(context.CloudBlockBlob.Name, cacheEntry);
         }
 
+        private void DeleteCacheIfExists(RequestContext context)
+        {
+            _cache.Remove(context.CloudBlockBlob.Name);
+        }
+
         private sealed class CacheEntry
         {
-            public CacheEntry(RequestContext requestContext)
+            public CacheEntry(string etag, byte[] content)
             {
-                RequestContext = requestContext;
+                ETag = etag;
+                Content = content;
             }
 
-            public RequestContext RequestContext { get; }
+            public string ETag { get; }
+
+            public byte[] Content { get; }
         }
     }
 }
