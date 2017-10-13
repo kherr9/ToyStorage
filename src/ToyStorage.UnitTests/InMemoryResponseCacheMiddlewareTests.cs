@@ -6,8 +6,15 @@ using Xunit;
 
 namespace ToyStorage.UnitTests
 {
-    public class InMemoryResponseCacheMiddlewareTests
+    public class InMemoryResponseCacheMiddlewareTests : IClassFixture<CloudStorageFixture>
     {
+        private readonly CloudStorageFixture _cloudStorageFixture;
+
+        public InMemoryResponseCacheMiddlewareTests(CloudStorageFixture cloudStorageFixture)
+        {
+            _cloudStorageFixture = cloudStorageFixture;
+        }
+
         [Fact]
         public async Task TestGetGet()
         {
@@ -106,16 +113,12 @@ namespace ToyStorage.UnitTests
 
         private DocumentCollection CreateDocumentCollection()
         {
-            var client = CloudStorageAccountHelper.CreateCloudBlobClient();
-            var container = client.GetContainerReference(GetType().Name.ToLowerInvariant());
-            container.CreateIfNotExistsAsync().Wait();
-
             var middleware = new Middleware();
             middleware.UseJsonFormatter();
             middleware.Use<InMemoryResponseCacheMiddleware>();
             middleware.Use<BlobStorageMiddleware>();
 
-            return new DocumentCollection(container, middleware);
+            return new DocumentCollection(_cloudStorageFixture.CloudBlobContainer, middleware);
         }
 
         private Entity GenerateEntity()

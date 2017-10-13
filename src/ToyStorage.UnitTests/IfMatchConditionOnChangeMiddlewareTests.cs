@@ -8,12 +8,14 @@ using Xunit;
 
 namespace ToyStorage.UnitTests
 {
-    public class IfMatchConditionOnChangeMiddlewareTests
+    public class IfMatchConditionOnChangeMiddlewareTests : IClassFixture<CloudStorageFixture>
     {
+        private readonly CloudStorageFixture _cloudStorageFixture;
         private readonly DocumentCollection _documentCollection;
 
-        public IfMatchConditionOnChangeMiddlewareTests()
+        public IfMatchConditionOnChangeMiddlewareTests(CloudStorageFixture cloudStorageFixture)
         {
+            _cloudStorageFixture = cloudStorageFixture;
             _documentCollection = CreateDocumentCollection();
         }
 
@@ -73,7 +75,7 @@ namespace ToyStorage.UnitTests
             Assert.NotNull(exception);
             Assert.Equal((int)HttpStatusCode.PreconditionFailed, exception.RequestInformation.HttpStatusCode);
         }
-        
+
         [Fact]
         public async Task TestGetWhenResourceHasChangedBetweenGetAndGet()
         {
@@ -94,16 +96,12 @@ namespace ToyStorage.UnitTests
 
         private DocumentCollection CreateDocumentCollection()
         {
-            var client = CloudStorageAccountHelper.CreateCloudBlobClient();
-            var container = client.GetContainerReference(GetType().Name.ToLowerInvariant());
-            container.CreateIfNotExistsAsync().Wait();
-
             var middleware = new Middleware();
             middleware.Use<IfMatchConditionOnChangeMiddleware>();
             middleware.UseJsonFormatter();
             middleware.Use<BlobStorageMiddleware>();
 
-            return new DocumentCollection(container, middleware);
+            return new DocumentCollection(_cloudStorageFixture.CloudBlobContainer, middleware);
         }
 
         private Entity GenerateEntity()

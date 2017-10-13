@@ -7,16 +7,12 @@ using Xunit;
 
 namespace ToyStorage.UnitTests
 {
-    public class DocumentCollectionTests
+    public class DocumentCollectionTests : IClassFixture<CloudStorageFixture>
     {
         private readonly DocumentCollection _documentCollection;
 
-        public DocumentCollectionTests()
+        public DocumentCollectionTests(CloudStorageFixture cloudStorageFixture)
         {
-            var client = CloudStorageAccountHelper.CreateCloudBlobClient();
-            var container = client.GetContainerReference(GetType().Name.ToLowerInvariant());
-            container.CreateIfNotExistsAsync().Wait();
-
             var middleware = new Middleware();
             middleware.Use<ValidationMiddleware>();
             middleware.UseJsonFormatter(opt =>
@@ -26,7 +22,7 @@ namespace ToyStorage.UnitTests
             middleware.Use<GZipMiddleware>();
             middleware.Use<BlobStorageMiddleware>();
 
-            _documentCollection = new DocumentCollection(container, middleware);
+            _documentCollection = new DocumentCollection(cloudStorageFixture.CloudBlobContainer, middleware);
         }
 
         [Fact]
