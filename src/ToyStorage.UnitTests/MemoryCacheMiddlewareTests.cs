@@ -8,27 +8,100 @@ namespace ToyStorage.UnitTests
 {
     public class MemoryCacheMiddlewareTests
     {
-        private readonly DocumentCollection _documentCollection;
-
-        public MemoryCacheMiddlewareTests()
-        {
-            _documentCollection = CreateDocumentCollection();
-        }
-
         [Fact]
-        public async Task TestSomething()
+        public async Task TestGetGet()
         {
             // Arrange
             var entity = GenerateEntity();
-            await _documentCollection.PutAsync(entity, entity.Id);
-            var entity1 = await _documentCollection.GetAsync<Entity>(entity.Id);
-            Assert.Equal(entity, entity1);
+            await PutEntityAsync(entity);
+
+            var documentCollection = CreateDocumentCollection();
 
             // Act
-            var entity2 = await _documentCollection.GetAsync<Entity>(entity.Id);
-            Assert.Equal(entity, entity2);
+            var notCachedEntity = await documentCollection.GetAsync<Entity>(entity.Id);
+            var cachedEntity = await documentCollection.GetAsync<Entity>(entity.Id);
 
             // Assert
+            Assert.Equal(entity, notCachedEntity);
+            Assert.Equal(entity, cachedEntity);
+            Assert.NotSame(notCachedEntity, cachedEntity);
+        }
+
+        [Fact]
+        public async Task TestGetPutGet()
+        {
+            // Arrange
+            var entity = GenerateEntity();
+            await PutEntityAsync(entity);
+
+            var documentCollection = CreateDocumentCollection();
+
+            // Act
+            var entity1 = await documentCollection.GetAsync<Entity>(entity.Id);
+            entity1.Name = "foo";
+            await documentCollection.PutAsync(entity1, entity1.Id);
+            var entity2 = await documentCollection.GetAsync<Entity>(entity.Id);
+
+            // Assert
+            Assert.NotEqual(entity, entity1);
+            Assert.Equal(entity1, entity2);
+        }
+
+        [Fact]
+        public async Task TestGetDelete()
+        {
+            // Arrange
+            var entity = GenerateEntity();
+            await PutEntityAsync(entity);
+
+            var documentCollection = CreateDocumentCollection();
+
+            // Act
+            var entity1 = await documentCollection.GetAsync<Entity>(entity.Id);
+            await documentCollection.DeleteAsync(entity1.Id);
+
+            // Assert
+            // no error
+        }
+
+        [Fact]
+        public async Task TestPutGet()
+        {
+            // Arrange
+            var entity = GenerateEntity();
+
+            var documentCollection = CreateDocumentCollection();
+
+            // Act
+            await documentCollection.PutAsync(entity, entity.Id);
+            var cachedEntity = await documentCollection.GetAsync<Entity>(entity.Id);
+
+            // Assert
+            Assert.Equal(entity, cachedEntity);
+            Assert.NotSame(entity, cachedEntity);
+        }
+
+        [Fact]
+        public async Task TestPutDelete()
+        {
+            // Arrange
+            var entity = GenerateEntity();
+
+            var documentCollection = CreateDocumentCollection();
+
+            // Act
+            await documentCollection.PutAsync(entity, entity.Id);
+            await documentCollection.DeleteAsync(entity.Id);
+
+            // Assert
+            // no error
+        }
+
+        private Task PutEntityAsync(Entity entity)
+        {
+            var documentCollection = CreateDocumentCollection();
+
+            return documentCollection.PutAsync(entity, entity.Id);
         }
 
         private DocumentCollection CreateDocumentCollection()

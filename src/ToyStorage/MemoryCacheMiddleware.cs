@@ -4,6 +4,12 @@ using Microsoft.WindowsAzure.Storage;
 
 namespace ToyStorage
 {
+    /// <summary>
+    /// Caches the response body and uses conditional gets the validate cache is valid.
+    /// </summary>
+    /// <remarks>
+    /// Must be placed after formatter, so that the formatter can deserialize the cached response body.
+    /// </remarks>
     public class MemoryCacheMiddleware : IMiddleware
     {
         private readonly ICache _cache;
@@ -22,7 +28,7 @@ namespace ToyStorage
                 // add If-None-Match for conditional GET
                 context.AccessCondition = AccessCondition.GenerateIfNoneMatchCondition(cacheEntry.ETag);
             }
-            
+
             // Next
             bool notModified = false;
             try
