@@ -3,6 +3,10 @@
 #if NET45
     using System.Runtime.Caching;
 
+    /// <inheritdoc />
+    /// <summary>
+    /// Implemenataion of <see cref="T:ToyStorage.ICache" /> for <see cref="T:System.Runtime.Caching.ObjectCache" />
+    /// </summary>
     internal class Cache : ICache
     {
         private readonly ObjectCache _objectCache;
@@ -39,6 +43,10 @@
 #if NETSTANDARD1_3
     using Microsoft.Extensions.Caching.Memory;
 
+    /// <inheritdoc />
+    /// <summary>
+    /// Implemenataion of <see cref="T:ToyStorage.ICache" /> for <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/>
+    /// </summary>
     internal class Cache : ICache
     {
         private readonly IMemoryCache _memoryCache;
