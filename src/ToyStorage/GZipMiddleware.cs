@@ -6,19 +6,26 @@ namespace ToyStorage
 {
     public class GZipMiddleware : IMiddleware
     {
+        private const string GZipContentEncoding = "gzip";
+
         public async Task Invoke(RequestContext context, RequestDelegate next)
         {
             if (context.IsWrite())
             {
                 context.Content = Compress(context.Content);
-                context.CloudBlockBlob.Properties.ContentEncoding = "gzip";
+                context.CloudBlockBlob.Properties.ContentEncoding = GZipContentEncoding;
             }
 
             await next();
 
-            if (context.IsRead() && context.CloudBlockBlob.Properties.ContentEncoding == "gzip")
+            if (context.IsRead())
             {
-                context.Content = Decompress(context.Content);
+                await context.CloudBlockBlob.FetchAttributesAsync();
+
+                if (context.CloudBlockBlob.Properties.ContentEncoding == GZipContentEncoding)
+                {
+                    context.Content = Decompress(context.Content);
+                }
             }
         }
 

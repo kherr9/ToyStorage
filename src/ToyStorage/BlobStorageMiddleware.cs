@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -11,13 +12,13 @@ namespace ToyStorage
             switch (context.RequestMethod)
             {
                 case RequestMethods.Get:
-                    await OnGetAsync(context);
+                    await OnGetAsync(context).ConfigureAwait(false);
                     break;
                 case RequestMethods.Put:
-                    await OnPutAsync(context);
+                    await OnPutAsync(context).ConfigureAwait(false);
                     break;
                 case RequestMethods.Delete:
-                    await OnDeleteAsync(context);
+                    await OnDeleteAsync(context).ConfigureAwait(false);
                     break;
                 default:
                     throw new InvalidOperationException($"Unknown {nameof(context.RequestMethod)} '{context.RequestMethod}'");
@@ -28,18 +29,17 @@ namespace ToyStorage
 
         private async Task OnGetAsync(RequestContext context)
         {
-            await context.CloudBlockBlob.FetchAttributesAsync();
+            using (var memoryStream = new MemoryStream())
+            {
+                await context.CloudBlockBlob.DownloadToStreamAsync(memoryStream, context.AccessCondition, null, null).ConfigureAwait(false);
 
-            var buffer = new byte[context.CloudBlockBlob.Properties.Length];
-
-            await context.CloudBlockBlob.DownloadToByteArrayAsync(buffer, 0, context.AccessCondition, null, null);
-
-            context.Content = buffer;
+                context.Content = memoryStream.ToArray();
+            }
         }
 
-        private async Task OnPutAsync(RequestContext context)
+        private Task OnPutAsync(RequestContext context)
         {
-            await context.CloudBlockBlob.UploadFromByteArrayAsync(context.Content, 0, context.Content.Length, context.AccessCondition, null, null);
+            return context.CloudBlockBlob.UploadFromByteArrayAsync(context.Content, 0, context.Content.Length, context.AccessCondition, null, null);
         }
 
         private Task OnDeleteAsync(RequestContext context)
