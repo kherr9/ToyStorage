@@ -1,18 +1,22 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Xunit;
 
 namespace ToyStorage.UnitTests
 {
-    public class InMemoryResponseCacheMiddlewareTests
+    public class InMemoryResponseCacheMiddlewareTests : IClassFixture<CloudStorageFixture>
     {
+        private readonly CloudStorageFixture _cloudStorageFixture;
+
+        public InMemoryResponseCacheMiddlewareTests(CloudStorageFixture cloudStorageFixture)
+        {
+            _cloudStorageFixture = cloudStorageFixture;
+        }
+
         [Fact]
         public async Task TestGetGet()
         {
             // Arrange
-            var entity = GenerateEntity();
+            var entity = Entity.GenerateEntity();
             await PutEntityAsync(entity);
 
             var documentCollection = CreateDocumentCollection();
@@ -31,7 +35,7 @@ namespace ToyStorage.UnitTests
         public async Task TestGetPutGet()
         {
             // Arrange
-            var entity = GenerateEntity();
+            var entity = Entity.GenerateEntity();
             await PutEntityAsync(entity);
 
             var documentCollection = CreateDocumentCollection();
@@ -51,7 +55,7 @@ namespace ToyStorage.UnitTests
         public async Task TestGetDelete()
         {
             // Arrange
-            var entity = GenerateEntity();
+            var entity = Entity.GenerateEntity();
             await PutEntityAsync(entity);
 
             var documentCollection = CreateDocumentCollection();
@@ -68,7 +72,7 @@ namespace ToyStorage.UnitTests
         public async Task TestPutGet()
         {
             // Arrange
-            var entity = GenerateEntity();
+            var entity = Entity.GenerateEntity();
 
             var documentCollection = CreateDocumentCollection();
 
@@ -85,7 +89,7 @@ namespace ToyStorage.UnitTests
         public async Task TestPutDelete()
         {
             // Arrange
-            var entity = GenerateEntity();
+            var entity = Entity.GenerateEntity();
 
             var documentCollection = CreateDocumentCollection();
 
@@ -106,59 +110,12 @@ namespace ToyStorage.UnitTests
 
         private DocumentCollection CreateDocumentCollection()
         {
-            var client = CloudStorageAccountHelper.CreateCloudBlobClient();
-            var container = client.GetContainerReference(GetType().Name.ToLowerInvariant());
-            container.CreateIfNotExistsAsync().Wait();
-
             var middleware = new Middleware();
             middleware.UseJsonFormatter();
             middleware.Use<InMemoryResponseCacheMiddleware>();
             middleware.Use<BlobStorageMiddleware>();
 
-            return new DocumentCollection(container, middleware);
-        }
-
-        private Entity GenerateEntity()
-        {
-            return new Entity()
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = Guid.NewGuid().ToString()
-            };
-        }
-
-        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
-        class Entity
-        {
-            [Required]
-            public string Id { get; set; }
-
-            [Required]
-            public string Name { get; set; }
-
-            public override bool Equals(object obj)
-            {
-                if (!(obj is Entity other))
-                {
-                    return false;
-                }
-
-                return Equals(other);
-            }
-
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    return ((Id != null ? Id.GetHashCode() : 0) * 397) ^ (Name != null ? Name.GetHashCode() : 0);
-                }
-            }
-
-            private bool Equals(Entity other)
-            {
-                return string.Equals(Id, other.Id) && string.Equals(Name, other.Name);
-            }
+            return new DocumentCollection(_cloudStorageFixture.CloudBlobContainer, middleware);
         }
     }
 }

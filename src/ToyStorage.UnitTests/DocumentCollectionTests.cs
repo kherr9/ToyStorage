@@ -1,22 +1,16 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
 using Xunit;
 
 namespace ToyStorage.UnitTests
 {
-    public class DocumentCollectionTests
+    public class DocumentCollectionTests : IClassFixture<CloudStorageFixture>
     {
         private readonly DocumentCollection _documentCollection;
 
-        public DocumentCollectionTests()
+        public DocumentCollectionTests(CloudStorageFixture cloudStorageFixture)
         {
-            var client = CloudStorageAccountHelper.CreateCloudBlobClient();
-            var container = client.GetContainerReference(GetType().Name.ToLowerInvariant());
-            container.CreateIfNotExistsAsync().Wait();
-
             var middleware = new Middleware();
             middleware.Use<ValidationMiddleware>();
             middleware.UseJsonFormatter(opt =>
@@ -26,14 +20,14 @@ namespace ToyStorage.UnitTests
             middleware.Use<GZipMiddleware>();
             middleware.Use<BlobStorageMiddleware>();
 
-            _documentCollection = new DocumentCollection(container, middleware);
+            _documentCollection = new DocumentCollection(cloudStorageFixture.CloudBlobContainer, middleware);
         }
 
         [Fact]
         public async Task TestPutGetDelete()
         {
             // Arrange
-            var entity = GenerateEntity();
+            var entity = Entity.GenerateEntity();
 
             // Act
             await _documentCollection.PutAsync(entity, entity.Id);
@@ -50,7 +44,7 @@ namespace ToyStorage.UnitTests
         public async Task TestPutWithValidationError()
         {
             // Arrange
-            var entity = GenerateEntity();
+            var entity = Entity.GenerateEntity();
             entity.Name = null;
 
             // Act
@@ -58,49 +52,6 @@ namespace ToyStorage.UnitTests
 
             // Assert
             Assert.NotNull(exception);
-        }
-
-        private Entity GenerateEntity()
-        {
-            return new Entity()
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = Guid.NewGuid().ToString()
-            };
-        }
-
-        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
-        class Entity
-        {
-            [Required]
-            public string Id { get; set; }
-
-            [Required]
-            public string Name { get; set; }
-
-            public override bool Equals(object obj)
-            {
-                if (!(obj is Entity other))
-                {
-                    return false;
-                }
-
-                return Equals(other);
-            }
-
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    return ((Id != null ? Id.GetHashCode() : 0) * 397) ^ (Name != null ? Name.GetHashCode() : 0);
-                }
-            }
-
-            private bool Equals(Entity other)
-            {
-                return string.Equals(Id, other.Id) && string.Equals(Name, other.Name);
-            }
         }
     }
 }
