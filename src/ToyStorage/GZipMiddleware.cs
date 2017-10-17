@@ -4,6 +4,11 @@ using System.Threading.Tasks;
 
 namespace ToyStorage
 {
+    /// <summary>
+    /// Middleware component for gzip compression of content body.
+    /// </summary>
+    /// <remarks>Insert after formatter middleware component, so that it compresses the
+    /// the formatted content on writes and decompresses content before formatter reads content</remarks>
     public class GZipMiddleware : IMiddleware
     {
         private const string GZipContentEncoding = "gzip";
