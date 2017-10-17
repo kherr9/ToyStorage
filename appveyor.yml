@@ -7,9 +7,10 @@ environment:
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # this will prevent the CLI from pre-populating the packages cache
     NUGET_XMLDOC_MODE: skip # do not extract XML documentation files
 
-#branches:
-#    only:
-#        - master # this will also run pull requests
+branches:
+    only:
+        - master # this will also run pull requests
+        - /^v\d+(?:\.\d+)?$/
 
 before_build:
 - cmd: >-
