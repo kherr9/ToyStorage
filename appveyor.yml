@@ -10,7 +10,7 @@ environment:
 branches:
     only:
         - master # this will also run pull requests
-        - /^v\d+(?:\.\d+)?$/ # releases
+     #   - /^v\d+(?:\.\d+)?$/ # releases
 
 before_build:
 - cmd: >-
