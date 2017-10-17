@@ -18,7 +18,7 @@ namespace ToyStorage
                 SetIfMatchConditionIfETagExists(context);
             }
 
-            await next();
+            await next().ConfigureAwait(false);
 
             await AddOrRemoveETagFromCacheAsync(context);
         }

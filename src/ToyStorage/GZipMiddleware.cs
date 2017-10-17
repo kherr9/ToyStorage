@@ -16,7 +16,7 @@ namespace ToyStorage
                 context.CloudBlockBlob.Properties.ContentEncoding = GZipContentEncoding;
             }
 
-            await next();
+            await next().ConfigureAwait(false);
 
             if (context.IsRead())
             {

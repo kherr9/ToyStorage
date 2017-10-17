@@ -60,7 +60,7 @@ namespace ToyStorage
             bool notModified = false;
             try
             {
-                await next();
+                await next().ConfigureAwait(false);
             }
             catch (StorageException ex)
             {
