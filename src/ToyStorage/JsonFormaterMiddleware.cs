@@ -32,11 +32,16 @@ namespace ToyStorage
                 context.CloudBlockBlob.Properties.ContentType = JsonContentType;
             }
 
-            await next();
+            await next().ConfigureAwait(false);
 
-            if (context.IsRead() && context.CloudBlockBlob.Properties.ContentType == JsonContentType)
+            if (context.IsRead())
             {
-                context.Entity = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(context.Content), context.EntityType, _serializerSettings);
+                await context.CloudBlockBlob.FetchAttributesAsync();
+
+                if (context.CloudBlockBlob.Properties.ContentType == JsonContentType)
+                {
+                    context.Entity = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(context.Content), context.EntityType, _serializerSettings);
+                }
             }
         }
     }
