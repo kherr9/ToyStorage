@@ -5,6 +5,14 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var version = new Version(Argument("build_version", "0.0.0.0"));
+var versionSuffix = Argument("version_suffix", "beta");
+
+Information("Arguments:");
+Information($"target:={target}");
+Information($"configuration:={configuration}");
+Information($"build_version:={version}");
+Information($"version_suffix:={versionSuffix}");
+Information("\n");
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -59,24 +67,21 @@ Task("Pack")
 {
 	Information($"Packing version {version}");
 
-	// beta
-	DotNetCorePack("./src/ToyStorage", new DotNetCorePackSettings
+	var settings = new DotNetCorePackSettings
 	{
 		Configuration = configuration,
 		OutputDirectory = artifactDir,
 		NoBuild = true,
-		VersionSuffix = $"ci-{version.Revision}",
 		ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version.ToString(3)}")
-	});
+	};
 
-	// release
-	//DotNetCorePack("./src/ToyStorage", new DotNetCorePackSettings
-	//{
-	//	Configuration = configuration,
-	//	OutputDirectory = artifactDir,
-	//	NoBuild = true,
-	//	ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version.ToString(3)}")
-	//});
+	if(!string.IsNullOrEmpty(versionSuffix))
+	{
+		settings.VersionSuffix = $"{versionSuffix}-{version.Revision}";
+		Information($"VersionSuffix: {settings.VersionSuffix}");
+	}
+
+	DotNetCorePack("./src/ToyStorage", settings);
 });
 
 //////////////////////////////////////////////////////////////////////
