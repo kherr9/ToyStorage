@@ -18,7 +18,7 @@ before_build:
 
 build_script:
 - ps: >-
-    $version_suffix = $(if ($env:APPVEYOR_REPO_TAG -eq "true") {""} else {"beta"})
+    $version_suffix = if ($env:APPVEYOR_REPO_TAG -eq "true") {""} else {"beta"}
     .\build.ps1 -ScriptArgs "-build_version='$env:APPVEYOR_BUILD_VERSION' -version_suffix='$version_suffix'"
 
 test: off
