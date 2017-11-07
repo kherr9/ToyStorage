@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
 using Xunit;
 
@@ -12,7 +11,6 @@ namespace ToyStorage.IntegrationTests
         public DocumentCollectionTests(CloudStorageFixture cloudStorageFixture)
         {
             var middleware = new Middleware();
-            middleware.Use<ValidationMiddleware>();
             middleware.UseJsonFormatter(opt =>
             {
                 opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -38,20 +36,6 @@ namespace ToyStorage.IntegrationTests
             // Assert
             Assert.Equal(entity, entityClone);
             Assert.NotSame(entity, entityClone);
-        }
-
-        [Fact]
-        public async Task TestPutWithValidationError()
-        {
-            // Arrange
-            var entity = Entity.GenerateEntity();
-            entity.Name = null;
-
-            // Act
-            var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _documentCollection.PutAsync(entity, entity.Id));
-
-            // Assert
-            Assert.NotNull(exception);
         }
     }
 }
