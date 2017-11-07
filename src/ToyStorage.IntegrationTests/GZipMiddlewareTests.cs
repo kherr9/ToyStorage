@@ -100,6 +100,26 @@ namespace ToyStorage.IntegrationTests
             Assert.Equal((int)HttpStatusCode.NotFound, exception.RequestInformation.HttpStatusCode);
         }
 
+        [Fact]
+        public async Task GZipIsSmallerThanNonCompressed()
+        {
+            // Arrange
+            var largeEntity = LargeEntity.GenerateLargeEntity();
+
+            // Act
+            await _documentCollection.PutAsync(largeEntity, "gzip");
+            await PutWithoutCompressionAsync(largeEntity, "uncompressed");
+
+            // Assert
+            var gzipBlob = _cloudStorageFixture.CloudBlobContainer.GetBlockBlobReference("gzip");
+            var uncompressedBlob = _cloudStorageFixture.CloudBlobContainer.GetBlockBlobReference("uncompressed");
+
+            await gzipBlob.FetchAttributesAsync();
+            await uncompressedBlob.FetchAttributesAsync();
+
+            Assert.True(gzipBlob.Properties.Length < uncompressedBlob.Properties.Length);
+        }
+
         private Task PutWithoutCompressionAsync(object entity, string id)
         {
             return CreateDocumentCollectionWithoutGZip().PutAsync(entity, id);
