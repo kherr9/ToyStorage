@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Security.Cryptography;
+﻿using System.Net;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Xunit;
