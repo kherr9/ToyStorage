@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ToyStorage.UnitTests
+namespace ToyStorage.IntegrationTests
 {
     [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]

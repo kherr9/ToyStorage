@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
 using Xunit;
 
-namespace ToyStorage.UnitTests
+namespace ToyStorage.IntegrationTests
 {
     public class DocumentCollectionTests : IClassFixture<CloudStorageFixture>
     {

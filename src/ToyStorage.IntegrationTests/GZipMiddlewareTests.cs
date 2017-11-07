@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Xunit;
 
-namespace ToyStorage.UnitTests
+namespace ToyStorage.IntegrationTests
 {
     public class GZipMiddlewareTests : IClassFixture<CloudStorageFixture>
     {

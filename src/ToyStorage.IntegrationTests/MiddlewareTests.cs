@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Xunit;
 
-namespace ToyStorage.UnitTests
+namespace ToyStorage.IntegrationTests
 {
     public class MiddlewareTests
     {
