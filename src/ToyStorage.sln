@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToyStorage", "ToyStorage\ToyStorage.csproj", "{2A889B26-7A76-415E-BBF2-24E592193D2D}"
 EndProject
@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{A0AC4627
 		..\tools\packages.config = ..\tools\packages.config
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToyStorage.UnitTests", "ToyStorage.UnitTests\ToyStorage.UnitTests.csproj", "{2AD5E1F3-0014-419C-9C9D-A03C5D0D647B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToyStorage.IntegrationTests", "ToyStorage.IntegrationTests\ToyStorage.IntegrationTests.csproj", "{2AD5E1F3-0014-419C-9C9D-A03C5D0D647B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

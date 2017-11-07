@@ -2,7 +2,7 @@
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace ToyStorage.UnitTests
+namespace ToyStorage.IntegrationTests
 {
     public class CloudStorageFixture : IDisposable
     {
