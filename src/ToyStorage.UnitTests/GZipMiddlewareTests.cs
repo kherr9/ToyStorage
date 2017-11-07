@@ -49,6 +49,21 @@ namespace ToyStorage.UnitTests
         }
 
         [Fact]
+        public async Task PutThenDelete()
+        {
+            // Arrange
+            var entity = Entity.GenerateEntity();
+
+            // Act
+            await _documentCollection.PutAsync(entity, entity.Id);
+            await _documentCollection.DeleteAsync(entity.Id);
+
+            // Assert
+            var getEntity = _documentCollection.GetAsync<Entity>(entity.Id);
+            Assert.Null(getEntity);
+        }
+
+        [Fact]
         public async Task PutThenGetLargeEntity()
         {
             // Arrange
