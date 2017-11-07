@@ -18,16 +18,6 @@ namespace ToyStorage.IntegrationTests
             _documentCollection = CreateDocumentCollection();
         }
 
-        private DocumentCollection CreateDocumentCollection()
-        {
-            var middleware = new Middleware();
-            middleware.UseJsonFormatter();
-            middleware.Use<ValidationMiddleware>();
-            middleware.Use<BlobStorageMiddleware>();
-
-            return new DocumentCollection(_cloudStorageFixture.CloudBlobContainer, middleware);
-        }
-
         [Fact]
         public async Task PutSimpleEntityWithNoValidationErrors()
         {
@@ -78,6 +68,16 @@ namespace ToyStorage.IntegrationTests
             // Assert (no error)
             Assert.Single(exception.ValidationResult.MemberNames);
             Assert.Equal("SimpleEntity.Name", exception.ValidationResult.MemberNames.Single());
+        }
+
+        private DocumentCollection CreateDocumentCollection()
+        {
+            var middleware = new Middleware();
+            middleware.UseJsonFormatter();
+            middleware.Use<ValidationMiddleware>();
+            middleware.Use<BlobStorageMiddleware>();
+
+            return new DocumentCollection(_cloudStorageFixture.CloudBlobContainer, middleware);
         }
 
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
