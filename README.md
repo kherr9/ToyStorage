@@ -58,7 +58,7 @@ The entity has been serialized to `JSON`, then written to the blob `mario` insid
 Now read our entity
 
 ```C#
-var entity = documentCollection.GetAsync<MyClass>("mario");
+var entity = await documentCollection.GetAsync<MyClass>("mario");
 
 Console.WriteLine($"I have {entity.Name}");
 // "I have Mario"
@@ -109,7 +109,6 @@ Toy Storage comes with some basic middleware components that cover some common u
 * **GZipMiddleware** - Compress requests and decompress responses.
 * **IfMatchConditionOnChangeMiddleware** - Add unobtrusive optimistic concurrency to data changing requests using the http precondition `If-Match` header.
 * **JsonFormaterMiddleware** - Formats request to JSON and response from JSON.
-* **ValidationMiddleware** - Validates request object with Data Annotation Validation.
 
 #### Writing middleware
 

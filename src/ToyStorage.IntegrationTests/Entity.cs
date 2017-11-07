@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ToyStorage.IntegrationTests
@@ -8,10 +7,8 @@ namespace ToyStorage.IntegrationTests
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
     public class Entity
     {
-        [Required]
         public string Id { get; set; }
-
-        [Required]
+        
         public string Name { get; set; }
 
         public override bool Equals(object obj)
