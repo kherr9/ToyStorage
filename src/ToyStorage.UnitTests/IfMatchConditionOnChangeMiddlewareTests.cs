@@ -52,7 +52,6 @@ namespace ToyStorage.UnitTests
             var exception = await Assert.ThrowsAsync<StorageException>(async () => await _documentCollection.PutAsync(entity, entity.Id));
 
             // Assert
-            Assert.NotNull(exception);
             Assert.Equal((int)HttpStatusCode.PreconditionFailed, exception.RequestInformation.HttpStatusCode);
         }
 
@@ -70,7 +69,6 @@ namespace ToyStorage.UnitTests
             var exception = await Assert.ThrowsAsync<StorageException>(async () => await _documentCollection.DeleteAsync(entity.Id));
 
             // Assert
-            Assert.NotNull(exception);
             Assert.Equal((int)HttpStatusCode.PreconditionFailed, exception.RequestInformation.HttpStatusCode);
         }
 
