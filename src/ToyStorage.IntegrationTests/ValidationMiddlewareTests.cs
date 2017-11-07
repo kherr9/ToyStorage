@@ -54,6 +54,32 @@ namespace ToyStorage.IntegrationTests
             Assert.Equal("Name", exception.ValidationResult.MemberNames.Single());
         }
 
+        [Fact]
+        public async Task PutNestedEntityWithNoValidationErrors()
+        {
+            // Arrange
+            var entity = NestedEntity.GenerateValidEntity();
+
+            // Act
+            await _documentCollection.PutAsync(entity, entity.Id);
+
+            // Assert (no error)
+        }
+
+        [Fact]
+        public async Task PutNestedEntityWithValidationErrors()
+        {
+            // Arrange
+            var entity = NestedEntity.GenerateInvalidEntity();
+
+            // Act
+            var exception = await Assert.ThrowsAsync<ValidationException>(() => _documentCollection.PutAsync(entity, entity.Id));
+
+            // Assert (no error)
+            Assert.Single(exception.ValidationResult.MemberNames);
+            Assert.Equal("SimpleEntity.Name", exception.ValidationResult.MemberNames.Single());
+        }
+
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
         private class SimpleEntity
@@ -79,6 +105,35 @@ namespace ToyStorage.IntegrationTests
                 {
                     Id = Guid.NewGuid().ToString(),
                     Name = null
+                };
+            }
+        }
+
+
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
+        private class NestedEntity
+        {
+            [Required]
+            public string Id { get; set; }
+
+            public SimpleEntity SimpleEntity { get; set; }
+
+            public static NestedEntity GenerateValidEntity()
+            {
+                return new NestedEntity()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    SimpleEntity = SimpleEntity.GenerateValidEntity()
+                };
+            }
+
+            public static NestedEntity GenerateInvalidEntity()
+            {
+                return new NestedEntity()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    SimpleEntity = SimpleEntity.GenerateInvalidEntity()
                 };
             }
         }
