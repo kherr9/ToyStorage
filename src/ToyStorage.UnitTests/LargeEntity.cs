@@ -29,7 +29,7 @@ namespace ToyStorage.UnitTests
 
         protected bool Equals(string[] values, string[] otherValues)
         {
-            if (Equals(values, otherValues))
+            if (ReferenceEquals(values, otherValues))
             {
                 return true;
             }
