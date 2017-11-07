@@ -58,7 +58,7 @@ The entity has been serialized to `JSON`, then written to the blob `mario` insid
 Now read our entity
 
 ```C#
-var entity = documentCollection.GetAsync<MyClass>("mario");
+var entity = await documentCollection.GetAsync<MyClass>("mario");
 
 Console.WriteLine($"I have {entity.Name}");
 // "I have Mario"
