@@ -78,7 +78,7 @@ namespace ToyStorage.UnitTests
         }
 
         [Fact]
-        public async Task FileNotFoundBubbleUp()
+        public async Task ExceptionsNotCaughtMiddleware()
         {
             // Act
             var exception = await Assert.ThrowsAsync<StorageException>(() => _documentCollection.GetAsync<Entity>("unknown_id"));
