@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ToyStorage.UnitTests
@@ -58,11 +59,35 @@ namespace ToyStorage.UnitTests
             Assert.Equal(entity, getEntity);
         }
 
+        [Fact]
+        public async Task GetIgnoreDecompressionWhenContentEncodingDoesNotExist()
+        {
+            // Arrange
+            var entity = Entity.GenerateEntity();
+
+            await CreateDocumentCollectionWithoutGZip().PutAsync(entity, entity.Id);
+
+            // Arrange
+            var getEntity = await _documentCollection.GetAsync<Entity>(entity.Id);
+
+            // Assert
+            Assert.Equal(entity, getEntity); // should be able to read entity, even though blob isn't gzip-d
+        }
+
         private DocumentCollection CreateDocumentCollection()
         {
             var middleware = new Middleware();
             middleware.UseJsonFormatter();
             middleware.Use<GZipMiddleware>();
+            middleware.Use<BlobStorageMiddleware>();
+
+            return new DocumentCollection(_cloudStorageFixture.CloudBlobContainer, middleware);
+        }
+
+        private DocumentCollection CreateDocumentCollectionWithoutGZip()
+        {
+            var middleware = new Middleware();
+            middleware.UseJsonFormatter();
             middleware.Use<BlobStorageMiddleware>();
 
             return new DocumentCollection(_cloudStorageFixture.CloudBlobContainer, middleware);
