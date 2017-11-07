@@ -57,7 +57,7 @@ namespace ToyStorage.UnitTests
             await _documentCollection.DeleteAsync(entity.Id);
 
             // Assert
-            var getEntity = _documentCollection.GetAsync<Entity>(entity.Id);
+            var getEntity = await _documentCollection.GetAsync<Entity>(entity.Id);
             Assert.Null(getEntity);
         }
 
