@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ToyStorage.IntegrationTests
+namespace ToyStorage.UnitTests
 {
     public class MiddlewarePipelineTests
     {

@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{A0AC4627
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToyStorage.IntegrationTests", "ToyStorage.IntegrationTests\ToyStorage.IntegrationTests.csproj", "{2AD5E1F3-0014-419C-9C9D-A03C5D0D647B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToyStorage.UnitTests", "ToyStorage.UnitTests\ToyStorage.UnitTests.csproj", "{A313DB7A-254B-4CDD-AA7E-9EA76E8A8401}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,10 @@ Global
 		{2AD5E1F3-0014-419C-9C9D-A03C5D0D647B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AD5E1F3-0014-419C-9C9D-A03C5D0D647B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AD5E1F3-0014-419C-9C9D-A03C5D0D647B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A313DB7A-254B-4CDD-AA7E-9EA76E8A8401}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A313DB7A-254B-4CDD-AA7E-9EA76E8A8401}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A313DB7A-254B-4CDD-AA7E-9EA76E8A8401}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A313DB7A-254B-4CDD-AA7E-9EA76E8A8401}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
