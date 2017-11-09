@@ -63,14 +63,19 @@ Task("Run-Unit-Tests")
 });
 
 Task("Run-Integration-Tests")
+    .IsDependentOn("Start-AzureStorageEmulator")
     .Does(() =>
 {
-	StartProcess(@"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe", "start");
-
 	DotNetCoreTest("./src/ToyStorage.IntegrationTests", new DotNetCoreTestSettings
     {
         Configuration = configuration
     });
+});
+
+Task("Start-AzureStorageEmulator")
+    .Does(() =>
+{
+	StartProcess(@"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe", "start");
 });
 
 Task("Pack")
