@@ -49,7 +49,7 @@ Task("Build")
 	DotNetCoreBuild("./src/ToyStorage.sln", new DotNetCoreBuildSettings
     {
         Configuration = configuration,
-		ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version.ToString(3)}")
+		ArgumentCustomization  = args => args.Append($"/p:VersionPrefix={version.ToString(3)} /m")
     });
 });
 
@@ -58,7 +58,7 @@ Task("Run-Unit-Tests")
 {
 	DotNetCoreTest("./src/ToyStorage.UnitTests", new DotNetCoreTestSettings
     {
-        Configuration = configuration
+        Configuration = configuration,
     });
 });
 
@@ -106,8 +106,8 @@ Task("Pack")
 
 Task("Default")
 	.IsDependentOn("Build")
-    .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Run-Integration-Tests")
+	.IsDependentOn("Run-Unit-Tests")
+	.IsDependentOn("Run-Integration-Tests")
 	.IsDependentOn("Pack");
 
 //////////////////////////////////////////////////////////////////////

@@ -12,10 +12,6 @@ branches:
         - master # this will also run pull requests
         - /^v\d+(?:\.\d+)?$/ # releases
 
-#before_build:
-#- cmd: >-
-#    "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
-
 build_script:
 - ps: >-
     $version_suffix = if ($env:APPVEYOR_REPO_TAG -eq "true") {""} else {"beta"}
