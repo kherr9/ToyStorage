@@ -53,6 +53,15 @@ Task("Build")
     });
 });
 
+Task("Run-Unit-Tests")
+    .Does(() =>
+{
+	DotNetCoreTest("./src/ToyStorage.UnitTests", new DotNetCoreTestSettings
+    {
+        Configuration = configuration
+    });
+});
+
 Task("Run-Integration-Tests")
     .Does(() =>
 {
@@ -90,6 +99,7 @@ Task("Pack")
 
 Task("Default")
 	.IsDependentOn("Build")
+    .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("Run-Integration-Tests")
 	.IsDependentOn("Pack");
 
