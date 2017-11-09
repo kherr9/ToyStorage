@@ -127,21 +127,19 @@ namespace ToyStorage.IntegrationTests
 
         private DocumentCollection CreateDocumentCollection()
         {
-            var pipeline = new MiddlewarePipelineBuilder()
+            var pipeline = new MiddlewarePipeline()
                 .UseJsonFormatter()
                 .Use<GZipMiddleware>()
-                .Use<BlobStorageMiddleware>()
-                .Build();
+                .Use<BlobStorageMiddleware>();
 
             return new DocumentCollection(_cloudStorageFixture.CloudBlobContainer, pipeline);
         }
 
         private DocumentCollection CreateDocumentCollectionWithoutGZip()
         {
-            var pipeline = new MiddlewarePipelineBuilder()
+            var pipeline = new MiddlewarePipeline()
                 .UseJsonFormatter()
-                .Use<BlobStorageMiddleware>()
-                .Build();
+                .Use<BlobStorageMiddleware>();
 
             return new DocumentCollection(_cloudStorageFixture.CloudBlobContainer, pipeline);
         }

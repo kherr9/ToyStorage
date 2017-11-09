@@ -10,14 +10,13 @@ namespace ToyStorage.IntegrationTests
 
         public DocumentCollectionTests(CloudStorageFixture cloudStorageFixture)
         {
-            var pipeline = new MiddlewarePipelineBuilder()
-            .UseJsonFormatter(opt =>
-            {
-                opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            })
-            .Use<GZipMiddleware>()
-            .Use<BlobStorageMiddleware>()
-            .Build();
+            var pipeline = new MiddlewarePipeline()
+                .UseJsonFormatter(opt =>
+                {
+                    opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                })
+                .Use<GZipMiddleware>()
+                .Use<BlobStorageMiddleware>();
 
             _documentCollection = new DocumentCollection(cloudStorageFixture.CloudBlobContainer, pipeline);
         }

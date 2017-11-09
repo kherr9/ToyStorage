@@ -5,15 +5,40 @@ using System.Threading.Tasks;
 
 namespace ToyStorage
 {
+    public delegate Task MiddlewareCallback(RequestContext requestContext, RequestDelegate requestDelegate);
+
     public class MiddlewarePipeline : IMiddlewarePipeline
     {
         private readonly MiddlewareCallback[] _pipeline;
+
+        public MiddlewarePipeline() : this(Enumerable.Empty<MiddlewareCallback>())
+        {
+        }
 
         public MiddlewarePipeline(IEnumerable<MiddlewareCallback> pipeline)
         {
             if (pipeline == null) throw new ArgumentNullException(nameof(pipeline));
 
             _pipeline = pipeline.ToArray();
+        }
+
+        public MiddlewarePipeline Use<T>() where T : IMiddlewareComponent, new()
+        {
+            return Use(new T());
+        }
+
+        public MiddlewarePipeline Use(IMiddlewareComponent component)
+        {
+            if (component == null) throw new ArgumentNullException(nameof(component));
+
+            return Use(component.Invoke);
+        }
+
+        public MiddlewarePipeline Use(MiddlewareCallback callback)
+        {
+            if (callback == null) throw new ArgumentNullException(nameof(callback));
+
+            return new MiddlewarePipeline(_pipeline.Concat(new[] { callback }));
         }
 
         public Task Run(RequestContext requestContext)

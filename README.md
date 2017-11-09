@@ -13,25 +13,24 @@ Toy Storage is still in early development and has not been published to NuGet, b
 
 Super-duper quick start:
 
-Create a `DocumentCollection` with `Middleware` and `CloudBlobContainer`.
+Create a `DocumentCollection` with `MiddlewarePipeline` and `CloudBlobContainer`.
 
 ```C#
-// create middleware
-var middleware = new Middleware();
-
-// add components to middleware
-middleware.Add<JsonFormaterMiddleware>();
-middleware.Add<BlobStorageMiddleware>();
+// create middleware pipeline and configure middleware components
+var pipeline = new MiddlewarePipeline()
+                    .Use<JsonFormaterMiddleware>()
+                    .Use<BlobStorageMiddleware>();
 
 // create container
 var container = CloudStorageAccount.Parse("UseDevelopmentStorage=true")
                     .CreateCloudBlobClient()
                     .GetContainerReference("entities");
 
+// ensure container
 await container.CreateIfNotExistsAsync();
 
 // create client
-var documentCollection = new DocumentCollection(container, middleware);
+var documentCollection = new DocumentCollection(container, pipeline);
 ```
 
 The `Middleware` components have access to the request, the response, and the next middleware component in the request-response cycle. This pattern is used in frameworks, such as [Express](http://expressjs.com/en/guide/using-middleware.html) and [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware?tabs=aspnetcore2x).
@@ -127,10 +126,10 @@ middleware.Use(async (ctx, next) =>
 });
 ```
 
-Implement `IMiddleware`
+Implement `IMiddlewareComponent`
 
 ```C#
-public class LoggerMiddleware : IMiddleware
+public class LoggerMiddleware : IMiddlewareComponent
 {
     public async Task Invoke(RequestContext context, RequestDelegate next)
     {

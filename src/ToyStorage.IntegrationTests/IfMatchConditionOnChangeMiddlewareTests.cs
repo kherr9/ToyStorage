@@ -92,11 +92,10 @@ namespace ToyStorage.IntegrationTests
 
         private DocumentCollection CreateDocumentCollection()
         {
-            var pipeline = new MiddlewarePipelineBuilder()
+            var pipeline = new MiddlewarePipeline()
                 .Use<IfMatchConditionOnChangeMiddleware>()
                 .UseJsonFormatter()
-                .Use<BlobStorageMiddleware>()
-                .Build();
+                .Use<BlobStorageMiddleware>();
 
             return new DocumentCollection(_cloudStorageFixture.CloudBlobContainer, pipeline);
         }
