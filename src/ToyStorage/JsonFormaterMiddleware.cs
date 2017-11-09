@@ -8,7 +8,7 @@ namespace ToyStorage
     /// <summary>
     /// Middleware component that formats object to binary (writes) and binary to object (reads).
     /// </summary>
-    public class JsonFormaterMiddleware : IMiddleware
+    public class JsonFormaterMiddleware : IMiddlewareComponent
     {
         private readonly JsonSerializerSettings _serializerSettings;
         private const string JsonContentType = "application/json";

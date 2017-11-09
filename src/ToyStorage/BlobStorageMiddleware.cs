@@ -5,7 +5,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace ToyStorage
 {
-    public class BlobStorageMiddleware : IMiddleware
+    public class BlobStorageMiddleware : IMiddlewareComponent
     {
         public async Task Invoke(RequestContext context, RequestDelegate next)
         {
