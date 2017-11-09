@@ -12,9 +12,9 @@ branches:
         - master # this will also run pull requests
         - /^v\d+(?:\.\d+)?$/ # releases
 
-before_build:
-- cmd: >-
-    "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
+#before_build:
+#- cmd: >-
+#    "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
 
 build_script:
 - ps: >-
