@@ -11,7 +11,7 @@ namespace ToyStorage
     /// Insert after formatter middleware component, so that it compresses the
     /// the formatted content on writes and decompresses content before formatter reads content.
     /// </remarks>
-    public class GZipMiddleware : IMiddleware
+    public class GZipMiddleware : IMiddlewareComponent
     {
         private const string GZipContentEncoding = "gzip";
 

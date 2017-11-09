@@ -4,13 +4,15 @@ namespace ToyStorage
 {
     public static class JsonFormaterMiddlewareExtensions
     {
-        public static void UseJsonFormatter(this Middleware middleware, Action<JsonOptions> setupAction = null)
+        public static IMiddlewarePipelineBuilder UseJsonFormatter(this IMiddlewarePipelineBuilder pipelineBuilder, Action<JsonOptions> setupAction = null)
         {
             var jsonOptions = new JsonOptions();
 
             setupAction?.Invoke(jsonOptions);
 
-            middleware.Use(new JsonFormaterMiddleware(jsonOptions.SerializerSettings));
+            pipelineBuilder.Use(new JsonFormaterMiddleware(jsonOptions.SerializerSettings));
+
+            return pipelineBuilder;
         }
     }
 }

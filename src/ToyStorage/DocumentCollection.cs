@@ -7,12 +7,12 @@ namespace ToyStorage
     public class DocumentCollection : IDocumentCollection
     {
         private readonly CloudBlobContainer _container;
-        private readonly Middleware _middleware;
+        private readonly IMiddlewarePipeline _pipeline;
 
-        public DocumentCollection(CloudBlobContainer container, Middleware middleware)
+        public DocumentCollection(CloudBlobContainer container, IMiddlewarePipeline pipeline)
         {
             _container = container ?? throw new ArgumentNullException(nameof(container));
-            _middleware = middleware ?? throw new ArgumentNullException(nameof(middleware));
+            _pipeline = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
         }
 
         public async Task<TEntity> GetAsync<TEntity>(string id)
@@ -28,7 +28,7 @@ namespace ToyStorage
                 CloudBlockBlob = GetBlob(id),
             };
 
-            await _middleware.Run(context);
+            await _pipeline.Run(context);
 
             return (TEntity)context.Entity;
         }
@@ -47,7 +47,7 @@ namespace ToyStorage
                 CloudBlockBlob = GetBlob(id)
             };
 
-            return _middleware.Run(context);
+            return _pipeline.Run(context);
         }
 
         public Task DeleteAsync(string id)
@@ -63,7 +63,7 @@ namespace ToyStorage
                 CloudBlockBlob = GetBlob(id)
             };
 
-            return _middleware.Run(context);
+            return _pipeline.Run(context);
         }
 
         private CloudBlockBlob GetBlob(string id)

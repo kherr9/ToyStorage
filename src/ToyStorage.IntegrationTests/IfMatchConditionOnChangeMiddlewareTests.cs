@@ -92,12 +92,13 @@ namespace ToyStorage.IntegrationTests
 
         private DocumentCollection CreateDocumentCollection()
         {
-            var middleware = new Middleware();
-            middleware.Use<IfMatchConditionOnChangeMiddleware>();
-            middleware.UseJsonFormatter();
-            middleware.Use<BlobStorageMiddleware>();
+            var pipeline = new MiddlewarePipelineBuilder()
+                .Use<IfMatchConditionOnChangeMiddleware>()
+                .UseJsonFormatter()
+                .Use<BlobStorageMiddleware>()
+                .Build();
 
-            return new DocumentCollection(_cloudStorageFixture.CloudBlobContainer, middleware);
+            return new DocumentCollection(_cloudStorageFixture.CloudBlobContainer, pipeline);
         }
 
         private async Task ModifyEntityInDifferentDocumentCollectionAsync(string entityId)
