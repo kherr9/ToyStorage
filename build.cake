@@ -103,9 +103,20 @@ Task("End-StartAzureStorageEmulator")
     .IsDependentOn("Begin-StartAzureStorageEmulator")
     .Does(() =>
 {
-	azureStorageEmulatorProcess.WaitForExit();
+	using(azureStorageEmulatorProcess)
+	{
+		azureStorageEmulatorProcess.WaitForExit();
 
-	Information("Azure Storage Emulator Start exit code: {0}", azureStorageEmulatorProcess.GetExitCode());
+		var exitCode = azureStorageEmulatorProcess.GetExitCode();
+		var exitCodeMessage = $"Azure Storage Emulator Start exit code: {exitCode}"
+
+		Information(exitCodeMessage);
+
+		if(exitCode != 0)
+		{
+			throw new Exception(exitCodeMessage)
+		}
+	}
 });
 
 Task("Pack")
