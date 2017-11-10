@@ -89,7 +89,14 @@ Task("Run-Integration-Tests")
 Task("Begin-StartAzureStorageEmulator")
     .Does(() =>
 {
-	azureStorageEmulatorProcess = StartAndReturnProcess(@"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe", new ProcessSettings{ Arguments = "start" });
+	var fileName = @"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe";
+	var processSettings = new ProcessSettings
+	{
+		Arguments = "start",
+		Silent = true
+	};
+
+	azureStorageEmulatorProcess = StartAndReturnProcess(fileName, processSettings);
 });
 
 Task("End-StartAzureStorageEmulator")
