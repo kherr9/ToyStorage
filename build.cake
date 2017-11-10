@@ -92,8 +92,7 @@ Task("Begin-StartAzureStorageEmulator")
 	var fileName = @"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe";
 	var processSettings = new ProcessSettings
 	{
-		Arguments = "start",
-		RedirectStandardOutput = true,
+		Arguments = "start"
 	};
 
 	azureStorageEmulatorProcess = StartAndReturnProcess(fileName, processSettings);
