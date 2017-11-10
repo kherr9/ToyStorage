@@ -108,11 +108,12 @@ Task("End-StartAzureStorageEmulator")
 		azureStorageEmulatorProcess.WaitForExit();
 
 		var exitCode = azureStorageEmulatorProcess.GetExitCode();
-		var exitCodeMessage = $"Azure Storage Emulator Start exit code: {exitCode}"
+		var exitCodeMessage = $"Azure Storage Emulator Start exit code: {exitCode}";
+		const int SuccessExitCode = 0;
 
 		Information(exitCodeMessage);
 
-		if(exitCode != 0)
+		if(exitCode != SuccessExitCode)
 		{
 			throw new Exception(exitCodeMessage)
 		}
