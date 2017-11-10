@@ -93,7 +93,7 @@ Task("Begin-StartAzureStorageEmulator")
 	var processSettings = new ProcessSettings
 	{
 		Arguments = "start",
-		Silent = true
+		RedirectStandardOutput = true,
 	};
 
 	azureStorageEmulatorProcess = StartAndReturnProcess(fileName, processSettings);
