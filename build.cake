@@ -30,7 +30,7 @@ IProcess azureStorageEmulatorProcess = null;
 
 Setup(context => 
 {
-	azureStorageEmulatorProcess = StartProcess(@"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe", "start");
+	azureStorageEmulatorProcess = StartAndReturnProcess(@"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe", "start");
 });
 
 Teardown(context =>
