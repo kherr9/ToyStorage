@@ -23,6 +23,25 @@ var buildDir = Directory("./src/ToyStorage/bin") + Directory(configuration);
 var artifactDir = Directory("./artifacts");
 
 //////////////////////////////////////////////////////////////////////
+// SETUP/TEARDOWN
+//////////////////////////////////////////////////////////////////////
+
+IProcess azureStorageEmulatorProcess = null;
+
+Setup(context => 
+{
+	azureStorageEmulatorProcess = StartProcess(@"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe", "start");
+});
+
+Teardown(context =>
+{
+	if(azureStorageEmulatorProcess != null)
+	{
+		azureStorageEmulatorProcess.Dispose();
+	}
+});
+
+//////////////////////////////////////////////////////////////////////
 // TASKS
 //////////////////////////////////////////////////////////////////////
 
@@ -75,7 +94,8 @@ Task("Run-Integration-Tests")
 Task("Start-AzureStorageEmulator")
     .Does(() =>
 {
-	StartProcess(@"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe", "start");
+	azureStorageEmulatorProcess.WaitForExit();
+	////StartProcess(@"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe", "start");
 });
 
 Task("Pack")
