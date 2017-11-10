@@ -115,7 +115,7 @@ Task("End-StartAzureStorageEmulator")
 
 		if(exitCode != SuccessExitCode)
 		{
-			throw new Exception(exitCodeMessage)
+			throw new Exception(exitCodeMessage);
 		}
 	}
 });
