@@ -28,11 +28,6 @@ var artifactDir = Directory("./artifacts");
 
 IProcess azureStorageEmulatorProcess = null;
 
-Setup(context => 
-{
-	azureStorageEmulatorProcess = StartAndReturnProcess(@"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe", new ProcessSettings{ Arguments = "start" });
-});
-
 Teardown(context =>
 {
 	if(azureStorageEmulatorProcess != null)
@@ -82,7 +77,7 @@ Task("Run-Unit-Tests")
 });
 
 Task("Run-Integration-Tests")
-    .IsDependentOn("Start-AzureStorageEmulator")
+    .IsDependentOn("AzureStorageEmulator")
     .Does(() =>
 {
 	DotNetCoreTest("./src/ToyStorage.IntegrationTests", new DotNetCoreTestSettings
@@ -91,11 +86,17 @@ Task("Run-Integration-Tests")
     });
 });
 
-Task("Start-AzureStorageEmulator")
+Task("Start-AzureStorageEmulator-Async")
+    .Does(() =>
+{
+	azureStorageEmulatorProcess = StartAndReturnProcess(@"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe", new ProcessSettings{ Arguments = "start" });
+});
+
+Task("AzureStorageEmulator")
+    .IsDependentOn("Start-AzureStorageEmulator-Async")
     .Does(() =>
 {
 	azureStorageEmulatorProcess.WaitForExit();
-	////StartProcess(@"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe", "start");
 });
 
 Task("Pack")
@@ -125,6 +126,7 @@ Task("Pack")
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
+	.IsDependentOn("Start-AzureStorageEmulator-Async")
 	.IsDependentOn("Build")
 	.IsDependentOn("Run-Unit-Tests")
 	.IsDependentOn("Run-Integration-Tests")
