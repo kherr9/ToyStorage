@@ -8,7 +8,7 @@ namespace ToyStorage.IntegrationTests
     {
         public CloudStorageFixture()
         {
-            var cloudStorageAccount = CloudStorageAccount.Parse("UseDevelopmentStorage=true;");
+            var cloudStorageAccount = CloudStorageAccount.Parse(GetConnectionString());
 
             var cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
 
@@ -24,6 +24,18 @@ namespace ToyStorage.IntegrationTests
         public void Dispose()
         {
             CloudBlobContainer.DeleteIfExistsAsync().Wait();
+        }
+
+        private string GetConnectionString()
+        {
+            var connectionString = Environment.GetEnvironmentVariable("ToyStorage.IntegrationTests.AzureStorageAccount");
+
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                connectionString = "UseDevelopmentStorage=true;";
+            }
+
+            return connectionString;
         }
     }
 }
