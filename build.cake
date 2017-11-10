@@ -23,6 +23,20 @@ var buildDir = Directory("./src/ToyStorage/bin") + Directory(configuration);
 var artifactDir = Directory("./artifacts");
 
 //////////////////////////////////////////////////////////////////////
+// SETUP/TEARDOWN
+//////////////////////////////////////////////////////////////////////
+
+IProcess azureStorageEmulatorProcess = null;
+
+Teardown(context =>
+{
+	if(azureStorageEmulatorProcess != null)
+	{
+		azureStorageEmulatorProcess.Dispose();
+	}
+});
+
+//////////////////////////////////////////////////////////////////////
 // TASKS
 //////////////////////////////////////////////////////////////////////
 
@@ -63,7 +77,7 @@ Task("Run-Unit-Tests")
 });
 
 Task("Run-Integration-Tests")
-    .IsDependentOn("Start-AzureStorageEmulator")
+    .IsDependentOn("End-StartAzureStorageEmulator")
     .Does(() =>
 {
 	DotNetCoreTest("./src/ToyStorage.IntegrationTests", new DotNetCoreTestSettings
@@ -72,10 +86,37 @@ Task("Run-Integration-Tests")
     });
 });
 
-Task("Start-AzureStorageEmulator")
+Task("Begin-StartAzureStorageEmulator")
     .Does(() =>
 {
-	StartProcess(@"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe", "start");
+	var fileName = @"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe";
+	var processSettings = new ProcessSettings
+	{
+		Arguments = "start"
+	};
+
+	azureStorageEmulatorProcess = StartAndReturnProcess(fileName, processSettings);
+});
+
+Task("End-StartAzureStorageEmulator")
+    .IsDependentOn("Begin-StartAzureStorageEmulator")
+    .Does(() =>
+{
+	using(azureStorageEmulatorProcess)
+	{
+		azureStorageEmulatorProcess.WaitForExit();
+
+		var exitCode = azureStorageEmulatorProcess.GetExitCode();
+		var exitCodeMessage = $"Azure Storage Emulator Start exit code: {exitCode}";
+		const int SuccessExitCode = 0;
+
+		Information(exitCodeMessage);
+
+		if(exitCode != SuccessExitCode)
+		{
+			throw new Exception(exitCodeMessage);
+		}
+	}
 });
 
 Task("Pack")
@@ -105,6 +146,7 @@ Task("Pack")
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
+	.IsDependentOn("Begin-StartAzureStorageEmulator")
 	.IsDependentOn("Build")
 	.IsDependentOn("Run-Unit-Tests")
 	.IsDependentOn("Run-Integration-Tests")
