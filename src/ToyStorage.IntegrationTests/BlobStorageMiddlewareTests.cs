@@ -91,12 +91,28 @@ namespace ToyStorage.IntegrationTests
             await Assert.ThrowsAsync<TaskCanceledException>(() => _documentCollection.PutAsync(entity, entity.Id, token));
         }
 
+        [Fact]
+        public async Task PutDoesNotCreateBlobWhenCancellationTokenSet()
+        {
+            // Arrange
+            var entity = Entity.GenerateEntity();
+            var token = GenerateCancelledCancellationToken();
+
+            // Act
+            await Assert.ThrowsAsync<TaskCanceledException>(() => _documentCollection.PutAsync(entity, entity.Id, token));
+
+            // Arrange
+            var blob = _cloudStorageFixture.CloudBlobContainer.GetBlockBlobReference(entity.Id);
+            // ReSharper disable once MethodSupportsCancellation
+            Assert.True(await blob.ExistsAsync());
+        }
+
         #endregion
 
         #region Delete
 
         [Fact]
-        public async Task DeleteRemovesBlob()
+        public async Task DeleteDoesDeleteBlob()
         {
             // Arrange
             var entity = await PutEntityAsync();
@@ -133,6 +149,22 @@ namespace ToyStorage.IntegrationTests
 
             // Act
             await Assert.ThrowsAsync<TaskCanceledException>(() => _documentCollection.DeleteAsync(entityId, token));
+        }
+
+        [Fact]
+        public async Task DeleteDoesNotDeleteBlobWhenCAncellationTokenSet()
+        {
+            // Arrange
+            var entity = await PutEntityAsync();
+            var token = GenerateCancelledCancellationToken();
+
+            // Act
+            await Assert.ThrowsAsync<TaskCanceledException>(() => _documentCollection.DeleteAsync(entity.Id, token));
+
+            // Arrange
+            var blob = _cloudStorageFixture.CloudBlobContainer.GetBlockBlobReference(entity.Id);
+            // ReSharper disable once MethodSupportsCancellation
+            Assert.True(await blob.ExistsAsync());
         }
 
         #endregion
