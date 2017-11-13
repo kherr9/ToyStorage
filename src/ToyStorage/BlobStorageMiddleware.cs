@@ -31,7 +31,7 @@ namespace ToyStorage
         {
             using (var memoryStream = new MemoryStream())
             {
-                await context.CloudBlockBlob.DownloadToStreamAsync(memoryStream, context.AccessCondition, null, null).ConfigureAwait(false);
+                await context.CloudBlockBlob.DownloadToStreamAsync(memoryStream, context.AccessCondition, null, null, context.CancellationToken).ConfigureAwait(false);
 
                 context.Content = memoryStream.ToArray();
             }
@@ -39,12 +39,12 @@ namespace ToyStorage
 
         private Task OnPutAsync(RequestContext context)
         {
-            return context.CloudBlockBlob.UploadFromByteArrayAsync(context.Content, 0, context.Content.Length, context.AccessCondition, null, null);
+            return context.CloudBlockBlob.UploadFromByteArrayAsync(context.Content, 0, context.Content.Length, context.AccessCondition, null, null, context.CancellationToken);
         }
 
         private Task OnDeleteAsync(RequestContext context)
         {
-            return context.CloudBlockBlob.DeleteAsync(DeleteSnapshotsOption.None, context.AccessCondition, null, null);
+            return context.CloudBlockBlob.DeleteAsync(DeleteSnapshotsOption.None, context.AccessCondition, null, null, context.CancellationToken);
         }
     }
 }
