@@ -104,7 +104,7 @@ namespace ToyStorage.IntegrationTests
             // Arrange
             var blob = _cloudStorageFixture.CloudBlobContainer.GetBlockBlobReference(entity.Id);
             // ReSharper disable once MethodSupportsCancellation
-            Assert.True(await blob.ExistsAsync());
+            Assert.False(await blob.ExistsAsync());
         }
 
         #endregion
