@@ -79,20 +79,9 @@ namespace ToyStorage.IntegrationTests
             var readEntity = await _documentCollection.GetAsync<Entity>(entity.Id);
             Assert.Equal("My Message Is Foo", readEntity.Name);
         }
-
+        
         [Fact]
-        public async Task PutThrowsExceptionWhenCancellationTokenSet()
-        {
-            // Arrange
-            var entity = Entity.GenerateEntity();
-            var token = GenerateCancelledCancellationToken();
-
-            // Act
-            await Assert.ThrowsAsync<TaskCanceledException>(() => _documentCollection.PutAsync(entity, entity.Id, token));
-        }
-
-        [Fact]
-        public async Task PutDoesNotCreateBlobWhenCancellationTokenSet()
+        public async Task PutThrowsExceptionAndDoesNotCreateBlobWhenCancellationTokenSet()
         {
             // Arrange
             var entity = Entity.GenerateEntity();
@@ -139,20 +128,9 @@ namespace ToyStorage.IntegrationTests
             // Assert
             Assert.Equal((int)HttpStatusCode.NotFound, exception.RequestInformation.HttpStatusCode);
         }
-
+        
         [Fact]
-        public async Task DeleteThrowsExceptionWhenCancellationTokenSet()
-        {
-            // Arrange
-            var entityId = Entity.GenerateId();
-            var token = GenerateCancelledCancellationToken();
-
-            // Act
-            await Assert.ThrowsAsync<TaskCanceledException>(() => _documentCollection.DeleteAsync(entityId, token));
-        }
-
-        [Fact]
-        public async Task DeleteDoesNotDeleteBlobWhenCAncellationTokenSet()
+        public async Task DeleteThrowsExceptionAndDoesNotDeleteBlobWhenCancellationTokenSet()
         {
             // Arrange
             var entity = await PutEntityAsync();
