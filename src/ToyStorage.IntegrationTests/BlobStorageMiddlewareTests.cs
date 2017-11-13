@@ -132,12 +132,7 @@ namespace ToyStorage.IntegrationTests
             var token = GenerateCancelledCancellationToken();
 
             // Act
-            var exception =
-                await Assert.ThrowsAsync<StorageException>(
-                    () => _documentCollection.DeleteAsync(entityId, token));
-
-            // Assert
-            Assert.Equal((int)HttpStatusCode.NotFound, exception.RequestInformation.HttpStatusCode);
+            await Assert.ThrowsAsync<TaskCanceledException>(() => _documentCollection.DeleteAsync(entityId, token));
         }
 
         #endregion
