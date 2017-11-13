@@ -36,7 +36,7 @@ namespace ToyStorage
 
             if (context.IsRead())
             {
-                await context.CloudBlockBlob.FetchAttributesAsync();
+                await context.CloudBlockBlob.FetchAttributesAsync(context.CancellationToken);
 
                 if (context.CloudBlockBlob.Properties.ContentType == JsonContentType)
                 {
