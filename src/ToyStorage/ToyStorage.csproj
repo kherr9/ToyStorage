@@ -4,11 +4,11 @@
     <VersionPrefix>$(VersionPrefix)</VersionPrefix>
     <Authors>Kevin Herr</Authors>
     <Title>Toy Storage</Title>
-    <RepositoryUrl>https://github.com/kherr9/ToyStorage</RepositoryUrl>
-    <ProjectUrl>https://github.com/kherr9/ToyStorage</ProjectUrl>
     <PackageTags>azure blob storage</PackageTags>
     <Summary>Toy Storage is a lightweight and extensible data access framework for Azure Blob Storage.</Summary>
     <Description>Toy Storage is a lightweight and extensible data access framework for Azure Blob Storage.</Description>
+    <PackageProjectUrl>https://github.com/kherr9/ToyStorage</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="WindowsAzure.Storage" Version="8.4.0" />
