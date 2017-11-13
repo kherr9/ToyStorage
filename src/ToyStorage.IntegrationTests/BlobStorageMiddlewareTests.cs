@@ -21,6 +21,34 @@ namespace ToyStorage.IntegrationTests
             _documentCollection = new DocumentCollection(cloudStorageFixture.CloudBlobContainer, pipeline);
         }
 
+        #region Get
+
+        [Fact]
+        public async Task GetReturnsData()
+        {
+            // Arrange
+            var entity = await PutEntityAsync();
+
+            // Act
+            var readEntity = _documentCollection.GetAsync<Entity>(entity.Id);
+
+            // Assert
+            Assert.NotNull(readEntity);
+        }
+
+        [Fact]
+        public async Task GetThrowsExceptionWhenCancellationTokenSet()
+        {
+            // Arrange
+            var entity = await PutEntityAsync();
+            var token = GenerateCancelledCancellationToken();
+
+            // Act
+            await Assert.ThrowsAsync<TaskCanceledException>(() => _documentCollection.GetAsync<Entity>(entity.Id, token));
+        }
+
+        #endregion
+
         #region Put
 
         [Fact]
