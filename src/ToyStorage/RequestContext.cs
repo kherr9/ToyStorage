@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -17,5 +18,7 @@ namespace ToyStorage
         public CloudBlockBlob CloudBlockBlob { get; set; }
 
         public AccessCondition AccessCondition { get; set; }
+
+        public CancellationToken CancellationToken { get; set; }
     }
 }

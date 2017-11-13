@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -15,7 +16,12 @@ namespace ToyStorage
             _pipeline = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
         }
 
-        public async Task<TEntity> GetAsync<TEntity>(string id)
+        public Task<TEntity> GetAsync<TEntity>(string id)
+        {
+            return GetAsync<TEntity>(id, CancellationToken.None);
+        }
+
+        public async Task<TEntity> GetAsync<TEntity>(string id, CancellationToken cancellationToken)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
 
@@ -26,6 +32,7 @@ namespace ToyStorage
                 EntityType = typeof(TEntity),
                 Content = null,
                 CloudBlockBlob = GetBlob(id),
+                CancellationToken = cancellationToken
             };
 
             await _pipeline.Run(context);
@@ -34,6 +41,11 @@ namespace ToyStorage
         }
 
         public Task PutAsync(object entity, string id)
+        {
+            return PutAsync(entity, id, CancellationToken.None);
+        }
+
+        public Task PutAsync(object entity, string id, CancellationToken cancellationToken)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
             if (id == null) throw new ArgumentNullException(nameof(id));
@@ -44,13 +56,19 @@ namespace ToyStorage
                 Entity = entity,
                 EntityType = entity.GetType(),
                 Content = null,
-                CloudBlockBlob = GetBlob(id)
+                CloudBlockBlob = GetBlob(id),
+                CancellationToken = cancellationToken
             };
 
             return _pipeline.Run(context);
         }
 
         public Task DeleteAsync(string id)
+        {
+            return DeleteAsync(id, CancellationToken.None);
+        }
+
+        public Task DeleteAsync(string id, CancellationToken cancellationToken)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
 
@@ -60,7 +78,8 @@ namespace ToyStorage
                 Entity = null,
                 EntityType = null,
                 Content = null,
-                CloudBlockBlob = GetBlob(id)
+                CloudBlockBlob = GetBlob(id),
+                CancellationToken = cancellationToken
             };
 
             return _pipeline.Run(context);

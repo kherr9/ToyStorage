@@ -44,7 +44,7 @@ namespace ToyStorage
             }
             else
             {
-                await context.CloudBlockBlob.FetchAttributesAsync();
+                await context.CloudBlockBlob.FetchAttributesAsync(context.CancellationToken);
                 var etag = context.CloudBlockBlob.Properties.ETag;
 
                 _etags.AddOrUpdate(name, etag, (key, oldValue) => etag);
