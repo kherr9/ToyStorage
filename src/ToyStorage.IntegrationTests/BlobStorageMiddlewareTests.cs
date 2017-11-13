@@ -79,7 +79,7 @@ namespace ToyStorage.IntegrationTests
             var readEntity = await _documentCollection.GetAsync<Entity>(entity.Id);
             Assert.Equal("My Message Is Foo", readEntity.Name);
         }
-        
+
         [Fact]
         public async Task PutThrowsExceptionAndDoesNotCreateBlobWhenCancellationTokenSet()
         {
@@ -128,7 +128,7 @@ namespace ToyStorage.IntegrationTests
             // Assert
             Assert.Equal((int)HttpStatusCode.NotFound, exception.RequestInformation.HttpStatusCode);
         }
-        
+
         [Fact]
         public async Task DeleteThrowsExceptionAndDoesNotDeleteBlobWhenCancellationTokenSet()
         {
