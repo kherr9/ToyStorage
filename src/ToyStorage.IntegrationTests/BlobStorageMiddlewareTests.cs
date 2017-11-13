@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
@@ -21,6 +20,8 @@ namespace ToyStorage.IntegrationTests
 
             _documentCollection = new DocumentCollection(cloudStorageFixture.CloudBlobContainer, pipeline);
         }
+
+        #region Put
 
         [Fact]
         public async Task PutCreatesBlob()
@@ -52,6 +53,21 @@ namespace ToyStorage.IntegrationTests
         }
 
         [Fact]
+        public async Task PutThrowsExceptionWhenCancellationTokenSet()
+        {
+            // Arrange
+            var entity = Entity.GenerateEntity();
+            var token = GenerateCancelledCancellationToken();
+
+            // Act
+            await Assert.ThrowsAsync<TaskCanceledException>(() => _documentCollection.PutAsync(entity, entity.Id, token));
+        }
+
+        #endregion
+
+        #region Delete
+
+        [Fact]
         public async Task DeleteRemovesBlob()
         {
             // Arrange
@@ -68,20 +84,48 @@ namespace ToyStorage.IntegrationTests
         [Fact]
         public async Task DeleteThrowsExceptionWhenBlobDoesNotExist()
         {
+            // Arrange
+            var entityId = Entity.GenerateId();
+
             // Act
             var exception =
                 await Assert.ThrowsAsync<StorageException>(
-                    () => _documentCollection.DeleteAsync(Guid.NewGuid().ToString()));
+                    () => _documentCollection.DeleteAsync(entityId));
 
             // Assert
             Assert.Equal((int)HttpStatusCode.NotFound, exception.RequestInformation.HttpStatusCode);
         }
+
+        [Fact]
+        public async Task DeleteThrowsExceptionWhenCancellationTokenSet()
+        {
+            // Arrange
+            var entityId = Entity.GenerateId();
+            var token = GenerateCancelledCancellationToken();
+
+            // Act
+            var exception =
+                await Assert.ThrowsAsync<StorageException>(
+                    () => _documentCollection.DeleteAsync(entityId, token));
+
+            // Assert
+            Assert.Equal((int)HttpStatusCode.NotFound, exception.RequestInformation.HttpStatusCode);
+        }
+
+        #endregion
 
         private async Task<Entity> PutEntityAsync()
         {
             var entity = Entity.GenerateEntity();
             await _documentCollection.PutAsync(entity, entity.Id);
             return entity;
+        }
+
+        private CancellationToken GenerateCancelledCancellationToken()
+        {
+            var cts = new CancellationTokenSource();
+            cts.Cancel();
+            return cts.Token;
         }
     }
 }

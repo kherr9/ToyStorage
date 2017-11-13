@@ -8,7 +8,7 @@ namespace ToyStorage.IntegrationTests
     public class Entity
     {
         public string Id { get; set; }
-        
+
         public string Name { get; set; }
 
         public override bool Equals(object obj)
@@ -38,9 +38,14 @@ namespace ToyStorage.IntegrationTests
         {
             return new Entity()
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = GenerateId(),
                 Name = Guid.NewGuid().ToString()
             };
+        }
+
+        public static string GenerateId()
+        {
+            return Guid.NewGuid().ToString();
         }
     }
 }
